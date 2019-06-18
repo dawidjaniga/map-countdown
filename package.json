@@ -1,0 +1,48 @@
+{
+  "name": "countdown-on-map",
+  "version": "0.0.1",
+  "description": "Display the countdown on a map via polygons",
+  "main": "index.js",
+  "repository": "git@github.com:dawidjaniga/countdown-on-map.git",
+  "author": "Dawid Janiga <dawidjaniga@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "standard && jest test",
+    "test:watch": "jest test --watch",
+    "prebuild": "rm -rf dist",
+    "build": "rollup -c",
+    "dev": "rollup -c -w"
+  },
+  "devDependencies": {
+    "@babel/core": "7.4.5",
+    "@babel/preset-env": "7.4.5",
+    "@testing-library/dom": "5.2.0",
+    "babel-jest": "24.8.0",
+    "jest": "24.8.0",
+    "jest-dom": "3.5.0",
+    "mockdate": "2.0.3",
+    "nodemon": "1.19.1",
+    "parcel": "1.12.3",
+    "rollup": "1.15.6",
+    "rollup-plugin-babel": "4.3.2",
+    "rollup-plugin-livereload": "1.0.1",
+    "rollup-plugin-node-resolve": "5.0.3",
+    "rollup-plugin-serve": "1.0.1",
+    "standard": "12.0.1"
+  },
+  "standard": {
+    "ignore": [
+      "dist"
+    ]
+  },
+  "jest": {
+    "verbose": true,
+    "setupFilesAfterEnv": [
+      "./jest.setup.js"
+    ],
+    "collectCoverage": true
+  },
+  "dependencies": {
+    "lodash": "4.17.11"
+  }
+}

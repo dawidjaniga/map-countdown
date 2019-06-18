@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Countdown recountTime() should emit event "recount-time" with ratios 1`] = `
+Object {
+  "daysRatio": 0.8608247422680413,
+  "hoursRatio": 0.4166666666666667,
+  "minutesRatio": 0,
+  "secondsRatio": 0,
+}
+`;
+
+exports[`Countdown should construct MapCountdown in provided container 1`] = `
+<div
+  id="countdown"
+>
+  <div
+    data-testid="map-countdown-days"
+  >
+    27
+  </div>
+  <div
+    data-testid="map-countdown-hours"
+  >
+    10
+  </div>
+  <div
+    data-testid="map-countdown-minutes"
+  >
+    0
+  </div>
+  <div
+    data-testid="map-countdown-seconds"
+  >
+    0
+  </div>
+</div>
+`;
