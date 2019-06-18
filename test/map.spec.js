@@ -3,6 +3,8 @@ import cloneDeep from 'lodash/cloneDeep'
 import createGoogleMapsMock from 'jest-google-maps-mock'
 import Map from '../src/map/map'
 import mapStyle from '../src/map/styles'
+import routePoints from '../test/__fixtures__/routePoints'
+
 const COLORS = {
   RUNDA_MAIN: '#afd02a',
   FORESTGREEN: '#228B22',
@@ -70,7 +72,6 @@ describe('Map', () => {
     const mapElement = document.createElement('div')
     mapElement.setAttribute('id', mapId)
     document.body.appendChild(mapElement)
-
     map.loadMap(selector)
 
     expect(global.window.google.maps.Map).toHaveBeenCalledTimes(1)
@@ -85,7 +86,6 @@ describe('Map', () => {
     const mapElement = document.createElement('div')
     mapElement.setAttribute('id', mapId)
     document.body.appendChild(mapElement)
-
     map.loadMap(selector, options)
 
     expect(global.window.google.maps.Map).toHaveBeenCalledTimes(1)
@@ -105,6 +105,13 @@ describe('Map', () => {
     expect(window[callback]).not.toBeDefined()
     expect(spy).toHaveBeenCalledTimes(1)
     expect(spy).toHaveBeenLastCalledWith(selector, options)
+  })
+
+  it('setRoutePoints() should set route points', () => {
+    const map = new Map({ key })
+    map.setRoutePoints(routePoints)
+
+    expect(map.getRoutePoints()).toEqual(routePoints)
   })
 })
 

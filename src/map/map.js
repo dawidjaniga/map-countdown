@@ -21,16 +21,19 @@ export default class Map {
     this.key = key
     this.callback = '__MapCountdownLoadMap'
     this.libraries = ['drawing']
+    this.routePoints = []
+    this.secondsPolyline = {}
+    this.minutesPolyline = {}
+    this.hoursPolyline = {}
+    this.daysPolyline = {}
 
     window[this.callback] = () => {
       delete window[this.callback]
       this.loadMap(selector, options)
+      this.initPolygons()
     }
 
     this.appendMapScriptToDocument()
-  }
-  updatePolygon (name, value) {
-    // console.log('name:', name)
   }
 
   appendMapScriptToDocument () {
@@ -68,5 +71,84 @@ export default class Map {
       document.querySelector(mapContainerSelector),
       { ...defaultOptions, ...options }
     )
+  }
+
+  initPolygons () {
+    this.daysPolyline = new google.maps.Polyline({
+      map: this.map,
+      strokeColor: COLORS.DAYS,
+      strokeWeight: 10
+    })
+
+    this.hoursPolyline = new google.maps.Polyline({
+      map: this.map,
+      strokeColor: COLORS.HOURS,
+      strokeWeight: 5
+    })
+
+    this.minutesPolyline = new google.maps.Polyline({
+      map: this.map,
+      strokeColor: COLORS.MINUTES,
+      strokeWeight: 5
+    })
+
+    this.secondsPolyline = new google.maps.Polyline({
+      map: this.map,
+      strokeColor: COLORS.SECONDS,
+      strokeWeight: 1
+    })
+  }
+
+  setRoutePoints (points) {
+    this.routePoints = points
+  }
+
+  getRoutePoints (points) {
+    return this.routePoints
+  }
+
+  updatePolygons (days, hours, minutes, seconds) {
+    const maxDistance = 10003
+    var daysPath = []
+
+    var hoursPath = []
+
+    var minutesPath = []
+
+    var secondsPath = []
+
+    this.routePoints.forEach(function (point) {
+      var distance = point.DistanceMeters[0]
+      var position = new google.maps.LatLng({
+        lat: parseFloat(point.Position[0].LatitudeDegrees[0]),
+        lng: parseFloat(point.Position[0].LongitudeDegrees[0])
+      })
+
+      var secondsMeters = parseFloat((1 - seconds) * maxDistance)
+      var minutesMeters = parseFloat((1 - minutes) * maxDistance)
+      var hoursMeters = parseFloat((1 - hours) * maxDistance)
+      var daysMeters = parseFloat((1 - days) * maxDistance)
+
+      if (distance < secondsMeters) {
+        secondsPath.push(position)
+      }
+
+      if (distance < minutesMeters) {
+        minutesPath.push(position)
+      }
+
+      if (distance < hoursMeters) {
+        hoursPath.push(position)
+      }
+
+      if (distance < daysMeters) {
+        daysPath.push(position)
+      }
+    })
+
+    this.secondsPolyline.setPath(secondsPath)
+    this.minutesPolyline.setPath(minutesPath)
+    this.hoursPolyline.setPath(hoursPath)
+    this.daysPolyline.setPath(daysPath)
   }
 }

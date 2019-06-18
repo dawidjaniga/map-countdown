@@ -59,6 +59,26 @@ var MapCountdown = (function () {
     return target;
   }
 
+  function _toConsumableArray(arr) {
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+  }
+
+  function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+      return arr2;
+    }
+  }
+
+  function _iterableToArray(iter) {
+    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+  }
+
+  function _nonIterableSpread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance");
+  }
+
   var Countdown =
   /*#__PURE__*/
   function () {
@@ -309,19 +329,24 @@ var MapCountdown = (function () {
       this.key = key;
       this.callback = '__MapCountdownLoadMap';
       this.libraries = ['drawing'];
+      this.routePoints = [];
+      this.secondsPolyline = {};
+      this.minutesPolyline = {};
+      this.hoursPolyline = {};
+      this.daysPolyline = {};
 
       window[this.callback] = function () {
+        delete window[_this.callback];
+
         _this.loadMap(selector, options);
+
+        _this.initPolygons();
       };
 
       this.appendMapScriptToDocument();
     }
 
     _createClass(Map, [{
-      key: "updatePolygon",
-      value: function updatePolygon(name, value) {// console.log('name:', name)
-      }
-    }, {
       key: "appendMapScriptToDocument",
       value: function appendMapScriptToDocument() {
         document.body.appendChild(this.createMapScript());
@@ -352,6 +377,80 @@ var MapCountdown = (function () {
         };
         this.map = new google.maps.Map(document.querySelector(mapContainerSelector), _objectSpread({}, defaultOptions, options));
       }
+    }, {
+      key: "initPolygons",
+      value: function initPolygons() {
+        this.daysPolyline = new google.maps.Polyline({
+          map: this.map,
+          strokeColor: COLORS.DAYS,
+          strokeWeight: 10
+        });
+        this.hoursPolyline = new google.maps.Polyline({
+          map: this.map,
+          strokeColor: COLORS.HOURS,
+          strokeWeight: 5
+        });
+        this.minutesPolyline = new google.maps.Polyline({
+          map: this.map,
+          strokeColor: COLORS.MINUTES,
+          strokeWeight: 5
+        });
+        this.secondsPolyline = new google.maps.Polyline({
+          map: this.map,
+          strokeColor: COLORS.SECONDS,
+          strokeWeight: 1
+        });
+      }
+    }, {
+      key: "setRoutePoints",
+      value: function setRoutePoints(points) {
+        this.routePoints = points;
+      }
+    }, {
+      key: "getRoutePoints",
+      value: function getRoutePoints(points) {
+        return this.routePoints;
+      }
+    }, {
+      key: "updatePolygons",
+      value: function updatePolygons(days, hours, minutes, seconds) {
+        var maxDistance = 10003;
+        var daysPath = [];
+        var hoursPath = [];
+        var minutesPath = [];
+        var secondsPath = [];
+        this.routePoints.forEach(function (point) {
+          var distance = point.DistanceMeters[0];
+          var position = new google.maps.LatLng({
+            lat: parseFloat(point.Position[0].LatitudeDegrees[0]),
+            lng: parseFloat(point.Position[0].LongitudeDegrees[0])
+          });
+          var secondsMeters = parseFloat((1 - seconds) * maxDistance);
+          var minutesMeters = parseFloat((1 - minutes) * maxDistance);
+          var hoursMeters = parseFloat((1 - hours) * maxDistance);
+          var daysMeters = parseFloat((1 - days) * maxDistance);
+
+          if (distance < secondsMeters) {
+            secondsPath.push(position);
+          }
+
+          if (distance < minutesMeters) {
+            minutesPath.push(position);
+          }
+
+          if (distance < hoursMeters) {
+            hoursPath.push(position);
+          }
+
+          if (distance < daysMeters) {
+            daysPath.push(position);
+          }
+        });
+        this.secondsPolyline.setPath(secondsPath);
+        this.minutesPolyline.setPath(minutesPath);
+        this.hoursPolyline.setPath(hoursPath);
+        this.daysPolyline.setPath(daysPath);
+      }
     }]);
 
     return Map;
@@ -360,25 +459,27 @@ var MapCountdown = (function () {
   var MapCountdown =
   /*#__PURE__*/
   function () {
-    function MapCountdown(containerSelector) {
+    function MapCountdown(_ref) {
+      var selector = _ref.selector,
+          routePoints = _ref.routePoints;
+
       _classCallCheck(this, MapCountdown);
 
-      this.countdown = new Countdown(containerSelector);
+      this.countdown = new Countdown(selector);
       this.map = new Map({
         key: 'AIzaSyCYkWHZM0ZdO1JeJGBqo44wLlQz31lh-zM',
         selector: '#map'
       });
+      this.map.setRoutePoints(routePoints);
       this.countdown.addEventListener('countdown:recount', this.updateMap.bind(this));
     }
 
     _createClass(MapCountdown, [{
       key: "updateMap",
       value: function updateMap(ratios) {
-        var _this = this;
+        var _this$map;
 
-        Object.keys(ratios).forEach(function (name) {
-          _this.map.updatePolygon(name, ratios[name]);
-        });
+        (_this$map = this.map).updatePolygons.apply(_this$map, _toConsumableArray(Object.values(ratios)));
       }
     }]);
 
