@@ -95,11 +95,14 @@ describe('Map', () => {
       ...options
     })
   })
-  it('Google Maps should invoke callback', () => {
+
+  it('Google Maps callback should invoke loadMap() and destroy itself', () => {
     const map = new Map({ key, selector, options }) // eslint-disable-line no-unused-vars
     const spy = jest.spyOn(map, 'loadMap')
-    window[callback]()
 
+    expect(window[callback]).toBeDefined()
+    window[callback]()
+    expect(window[callback]).not.toBeDefined()
     expect(spy).toHaveBeenCalledTimes(1)
     expect(spy).toHaveBeenLastCalledWith(selector, options)
   })

@@ -23,6 +23,7 @@ export default class Map {
     this.libraries = ['drawing']
 
     window[this.callback] = () => {
+      delete window[this.callback]
       this.loadMap(selector, options)
     }
 
