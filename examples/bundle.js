@@ -132,36 +132,57 @@ var MapCountdown = (function () {
     return Countdown;
   }(); // google.maps.event.addDomListener(window, 'load', function () {
 
+  /* global google */
   var Map =
   /*#__PURE__*/
   function () {
-    function Map() {// this.loadMaps()
+    function Map(_ref) {
+      var _this = this;
+
+      var key = _ref.key,
+          selector = _ref.selector,
+          options = _ref.options;
 
       _classCallCheck(this, Map);
+
+      this.key = key;
+      this.callback = '__MapCountdownLoadMap';
+      this.libraries = ['drawing'];
+
+      window[this.callback] = function () {
+        _this.loadMap(selector, options);
+      };
+
+      this.appendMapScriptToDocument();
     }
 
     _createClass(Map, [{
       key: "updatePolygon",
-      value: function updatePolygon(name, value) {} // console.log('name:', name)
-      //   async loadMaps () {
-      //     console.log('loadMaps:')
-      //     try {
-      //       const googleMaps = await loadGoogleMapsApi({
-      //         key: 'AIzaSyCYkWHZM0ZdO1JeJGBqo44wLlQz31lh-zM',
-      //         libraries: ['drawing']
-      //       })
-      //       this.map = new googleMaps.Map(document.querySelector('#map'), {
-      //         center: {
-      //           lat: 40.7484405,
-      //           lng: -73.9944191
-      //         },
-      //         zoom: 12
-      //       })
-      //     } catch (e) {
-      //       console.error('Maps errors', e)
-      //     }
-      //   }
-
+      value: function updatePolygon(name, value) {// console.log('name:', name)
+      }
+    }, {
+      key: "appendMapScriptToDocument",
+      value: function appendMapScriptToDocument() {
+        document.body.appendChild(this.createMapScript());
+      }
+    }, {
+      key: "createMapScript",
+      value: function createMapScript() {
+        var script = document.createElement('script');
+        script.setAttribute('src', "https://maps.googleapis.com/maps/api/js?key=".concat(this.key, "&callback=").concat(this.callback, "&libraries=").concat(this.libraries));
+        script.setAttribute('defer', true);
+        script.setAttribute('async', true);
+        return script;
+      }
+    }, {
+      key: "loadMap",
+      value: function loadMap(mapContainerSelector, mapOptions) {
+        try {
+          this.map = new google.maps.Map(document.querySelector(mapContainerSelector), mapOptions);
+        } catch (e) {
+          console.log('e:', e);
+        }
+      }
     }]);
 
     return Map;
@@ -174,7 +195,17 @@ var MapCountdown = (function () {
       _classCallCheck(this, MapCountdown);
 
       this.countdown = new Countdown(containerSelector);
-      this.map = new Map();
+      this.map = new Map({
+        key: 'AIzaSyCYkWHZM0ZdO1JeJGBqo44wLlQz31lh-zM',
+        selector: '#map',
+        options: {
+          center: {
+            lat: 40.7484405,
+            lng: -73.9944191
+          },
+          zoom: 12
+        }
+      });
       this.countdown.addEventListener('countdown:recount', this.updateMap.bind(this));
     }
 
