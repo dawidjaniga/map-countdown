@@ -1,19 +1,12 @@
 import Countdown from './countdown'
-import Map from './map'
+import Map from './map/map'
 
 export default class MapCountdown {
   constructor (containerSelector) {
     this.countdown = new Countdown(containerSelector)
     this.map = new Map({
       key: 'AIzaSyCYkWHZM0ZdO1JeJGBqo44wLlQz31lh-zM',
-      selector: '#map',
-      options: {
-        center: {
-          lat: 40.7484405,
-          lng: -73.9944191
-        },
-        zoom: 12
-      }
+      selector: '#map'
     })
     this.countdown.addEventListener(
       'countdown:recount',

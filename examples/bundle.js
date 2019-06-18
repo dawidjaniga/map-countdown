@@ -25,6 +25,40 @@ var MapCountdown = (function () {
     return Constructor;
   }
 
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  function _objectSpread(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+      var ownKeys = Object.keys(source);
+
+      if (typeof Object.getOwnPropertySymbols === 'function') {
+        ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+          return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+        }));
+      }
+
+      ownKeys.forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    }
+
+    return target;
+  }
+
   var Countdown =
   /*#__PURE__*/
   function () {
@@ -132,7 +166,134 @@ var MapCountdown = (function () {
     return Countdown;
   }(); // google.maps.event.addDomListener(window, 'load', function () {
 
-  /* global google */
+  var mapStyle = [{
+    featureType: 'all',
+    elementType: 'labels.text.fill',
+    stylers: [{
+      saturation: 36
+    }, {
+      color: '#000000'
+    }, {
+      lightness: 40
+    }]
+  }, {
+    featureType: 'all',
+    elementType: 'labels.text.stroke',
+    stylers: [{
+      visibility: 'on'
+    }, {
+      color: '#000000'
+    }, {
+      lightness: 16
+    }]
+  }, {
+    featureType: 'all',
+    elementType: 'labels.icon',
+    stylers: [{
+      visibility: 'off'
+    }]
+  }, {
+    featureType: 'administrative',
+    elementType: 'geometry.fill',
+    stylers: [{
+      color: '#000000'
+    }, {
+      lightness: 20
+    }]
+  }, {
+    featureType: 'administrative',
+    elementType: 'geometry.stroke',
+    stylers: [{
+      color: '#000000'
+    }, {
+      lightness: 17
+    }, {
+      weight: 1.2
+    }]
+  }, {
+    featureType: 'landscape',
+    elementType: 'geometry',
+    stylers: [{
+      color: '#000000'
+    }, {
+      lightness: 20
+    }]
+  }, {
+    featureType: 'poi',
+    elementType: 'geometry',
+    stylers: [{
+      color: '#000000'
+    }, {
+      lightness: 21
+    }]
+  }, {
+    featureType: 'road.highway',
+    elementType: 'geometry.fill',
+    stylers: [{
+      color: '#000000'
+    }, {
+      lightness: 17
+    }]
+  }, {
+    featureType: 'road.highway',
+    elementType: 'geometry.stroke',
+    stylers: [{
+      color: '#000000'
+    }, {
+      lightness: 29
+    }, {
+      weight: 0.2
+    }]
+  }, {
+    featureType: 'road.arterial',
+    elementType: 'geometry',
+    stylers: [{
+      color: '#000000'
+    }, {
+      lightness: 18
+    }]
+  }, {
+    featureType: 'road.local',
+    elementType: 'geometry',
+    stylers: [{
+      color: '#000000'
+    }, {
+      lightness: 16
+    }]
+  }, {
+    featureType: 'transit',
+    elementType: 'geometry',
+    stylers: [{
+      color: '#000000'
+    }, {
+      lightness: 19
+    }]
+  }, {
+    featureType: 'water',
+    elementType: 'geometry',
+    stylers: [{
+      color: '#000000'
+    }, {
+      lightness: 17
+    }]
+  }];
+
+  var COLORS = {
+    RUNDA_MAIN: '#afd02a',
+    FORESTGREEN: '#228B22',
+    MAP_BACKGROUND: '#333333',
+    DAYS: '#252d11',
+    HOURS: '#643627',
+    MINUTES: '#822d76',
+    SECONDS: '#afd02a',
+    ROUTE_1: '#ED7296',
+    ROUTE_2: '#7072CF',
+    ROUTE_3: '#FFF1CE',
+    ROUTE_4: '#FF9311',
+    ROUTE_5: '#D64700',
+    ROUTE_6: '#2980B9'
+  };
+
   var Map =
   /*#__PURE__*/
   function () {
@@ -176,12 +337,20 @@ var MapCountdown = (function () {
       }
     }, {
       key: "loadMap",
-      value: function loadMap(mapContainerSelector, mapOptions) {
-        try {
-          this.map = new google.maps.Map(document.querySelector(mapContainerSelector), mapOptions);
-        } catch (e) {
-          console.log('e:', e);
-        }
+      value: function loadMap(mapContainerSelector) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var defaultOptions = {
+          zoom: 14,
+          center: {
+            lat: 53.79061631330304,
+            lng: 17.242156863212585
+          },
+          backgroundColor: COLORS.MAP_BACKGROUND,
+          mapTypeId: 'terrain',
+          scrollwheel: false,
+          styles: mapStyle
+        };
+        this.map = new google.maps.Map(document.querySelector(mapContainerSelector), _objectSpread({}, defaultOptions, options));
       }
     }]);
 
@@ -197,14 +366,7 @@ var MapCountdown = (function () {
       this.countdown = new Countdown(containerSelector);
       this.map = new Map({
         key: 'AIzaSyCYkWHZM0ZdO1JeJGBqo44wLlQz31lh-zM',
-        selector: '#map',
-        options: {
-          center: {
-            lat: 40.7484405,
-            lng: -73.9944191
-          },
-          zoom: 12
-        }
+        selector: '#map'
       });
       this.countdown.addEventListener('countdown:recount', this.updateMap.bind(this));
     }
