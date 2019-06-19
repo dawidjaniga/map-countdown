@@ -2,10 +2,10 @@ import Countdown from './countdown'
 import Map from './map/map'
 
 export default class MapCountdown {
-  constructor ({ selector, routePoints }) {
+  constructor ({ selector, routePoints, key }) {
     this.countdown = new Countdown(selector)
     this.map = new Map({
-      key: 'AIzaSyCYkWHZM0ZdO1JeJGBqo44wLlQz31lh-zM',
+      key,
       selector: '#map'
     })
     this.map.setRoutePoints(routePoints)
