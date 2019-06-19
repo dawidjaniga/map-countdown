@@ -11,6 +11,7 @@
     "test:watch": "jest test --watch",
     "prebuild": "rm -rf dist",
     "build": "rollup -c",
+    "build:cli": "rollup -c rollup.config.bin.js",
     "dev": "rollup -c -w"
   },
   "devDependencies": {
