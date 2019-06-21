@@ -118,10 +118,10 @@ export default class Map {
     var secondsPath = []
 
     this.routePoints.forEach(function (point) {
-      var distance = point.DistanceMeters[0]
+      var distance = point.DistanceMeters
       var position = new google.maps.LatLng({
-        lat: parseFloat(point.Position[0].LatitudeDegrees[0]),
-        lng: parseFloat(point.Position[0].LongitudeDegrees[0])
+        lat: parseFloat(point.Position.LatitudeDegrees),
+        lng: parseFloat(point.Position.LongitudeDegrees)
       })
 
       var secondsMeters = parseFloat((1 - seconds) * maxDistance)
