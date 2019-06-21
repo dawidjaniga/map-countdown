@@ -7,8 +7,8 @@
   "author": "Dawid Janiga <dawidjaniga@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "standard && jest test",
-    "test:watch": "jest test --watch",
+    "test": "standard && TZ=utc jest test",
+    "test:watch": "TZ=utc jest test --watch",
     "prebuild": "rm -rf dist",
     "build": "rollup -c",
     "build:cli": "rollup -c rollup.config.bin.js",
