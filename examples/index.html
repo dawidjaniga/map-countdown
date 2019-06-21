@@ -5,16 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <script src="routePoints.js"></script>
     <script src="bundle.js"></script>
     <script>
         window.addEventListener('DOMContentLoaded', function () {
-            var countdown = new MapCountdown('#countdown')
+            var countdown = new MapCountdown({
+                selector: '#countdown',
+                key: 'google_api_key',
+                routePoints: routePoints
+            })
         })
     </script>
     <style>
-        #map {
-            width: 500px;
-            height: 500px;
+        html,
+        body {
+            margin: 0;
+
         }
     </style>
 </head>
@@ -22,7 +28,6 @@
 <body>
 
     <div id="countdown"></div>
-    <div id="map"></div>
 
 </body>
 

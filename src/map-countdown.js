@@ -1,10 +1,20 @@
 import Countdown from './countdown'
-import MapClass from './map'
+import Map from './map/map'
+import './style.css'
 
 export default class MapCountdown {
-  constructor (containerSelector) {
-    this.countdown = new Countdown(containerSelector)
-    this.map = new MapClass()
+  constructor ({ selector, routePoints, key }) {
+    this.containerElement = document.querySelector(selector)
+    this.containerElement.classList.add('map-countdown')
+    this.countdown = new Countdown(this.containerElement)
+    this.map = new Map({
+      key,
+      containerElement: this.containerElement
+    })
+    this.map.setRoutePoints(routePoints)
+    this.attachEvents()
+  }
+  attachEvents () {
     this.countdown.addEventListener(
       'countdown:recount',
       this.updateMap.bind(this)
@@ -12,8 +22,6 @@ export default class MapCountdown {
   }
 
   updateMap (ratios) {
-    Object.keys(ratios).forEach(name => {
-      this.map.updatePolygon(name, ratios[name])
-    })
+    this.map.updatePolygons(...Object.values(ratios))
   }
 }

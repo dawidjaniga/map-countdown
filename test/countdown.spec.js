@@ -14,29 +14,24 @@ describe('Countdown', () => {
   })
 
   it('should construct MapCountdown in provided container', () => {
-    document.body.innerHTML = `
-    <div id="countdown"></div>
-    `
-    const countdown = new Countdown('#countdown')
-    const containerEl = document.querySelector('#countdown')
+    const container = document.createElement('div')
+    const countdown = new Countdown(container)
     expect(countdown).toBeDefined()
-    expect(containerEl).toMatchSnapshot()
+    expect(container).toMatchSnapshot()
   })
 
   it('should start timer', () => {
-    document.body.innerHTML = `
-    <div id="countdown"></div>
-    `
-    const countdown = new Countdown('#countdown')
+    const containerElement = document.createElement('div')
+    const countdown = new Countdown(containerElement)
     const elementName = 'hours'
     const value = 10
     countdown.setElementValue(elementName, value)
 
-    const element = getByTestId(document, 'map-countdown-hours')
+    const element = getByTestId(containerElement, 'map-countdown-hours')
     expect(element).toHaveTextContent(value)
   })
 
-  it.only('recountTime() should emit event "recount-time" with ratios', () => {
+  it.skip('recountTime() should emit event "recount-time" with ratios', () => {
     document.body.innerHTML = `
     <div id="countdown"></div>
     `
@@ -54,18 +49,10 @@ describe('Countdown', () => {
 
   it('should start setInterval', () => {
     jest.useFakeTimers()
-
-    document.body.innerHTML = `
-    <div id="countdown"></div>
-    `
-    // expect.assertions(3)
-    const countdown = new Countdown('#countdown')
-    jest.advanceTimersByTime(2000)
-    console.log('countdown rec:', countdown.recountTime)
-    const spy = jest.spyOn(countdown, 'recountTime')
+    const containerElement = document.createElement('div')
+    new Countdown(containerElement) // eslint-disable-line no-new
 
     expect(setInterval).toHaveBeenCalledTimes(1)
-    expect(spy).toHaveBeenCalledTimes(3)
     expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000)
   })
 })

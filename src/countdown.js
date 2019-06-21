@@ -1,5 +1,8 @@
 export default class Countdown {
-  constructor (containerSelector) {
+  constructor (containerElement) {
+    this.containerElement = containerElement
+    this.countdownContainer = document.createElement('div')
+    this.countdownContainer.classList.add('map-countdown__countdown')
     this.meta = new Date(2019, 6, 13, 11)
     this.oneDayMilliseconds = 86400000
     this.beginOfYear = new Date(this.meta.getFullYear(), 0, 0)
@@ -9,28 +12,48 @@ export default class Countdown {
     )
     this.elements = {
       days: {
-        testId: 'map-countdown-days'
+        testId: 'map-countdown-days',
+        text: 'Dni'
       },
       hours: {
-        testId: 'map-countdown-hours'
+        testId: 'map-countdown-hours',
+        text: 'Godzin'
       },
       minutes: {
-        testId: 'map-countdown-minutes'
+        testId: 'map-countdown-minutes',
+        text: 'Minut'
       },
       seconds: {
-        testId: 'map-countdown-seconds'
+        testId: 'map-countdown-seconds',
+        text: 'Sekund'
       }
     }
-    this.containerEl = document.querySelector(containerSelector)
+
     const fragment = document.createDocumentFragment()
 
-    Object.values(this.elements).forEach(item => {
-      const element = this.createElement('div', item.testId)
+    Object.keys(this.elements).forEach(itemName => {
+      const elementFragment = document.createDocumentFragment()
+      const item = this.elements[itemName]
+      const element = document.createElement('div')
+      const number = this.createElement('div', item.testId)
+      const text = document.createElement('h4')
+      element.classList.add('map-countdown__item')
+      text.classList.add('map-countdown__label')
+      text.textContent = item.text
+      elementFragment.appendChild(element)
+      element.appendChild(number)
+      element.appendChild(text)
+
+      number.classList.add(
+        'map-countdown__number',
+        `map-countdown__number--${itemName}`
+      )
+      fragment.appendChild(elementFragment)
       item.element = element
-      fragment.appendChild(element)
     })
 
-    this.containerEl.appendChild(fragment)
+    this.countdownContainer.appendChild(fragment)
+    this.containerElement.appendChild(this.countdownContainer)
     this.events = {}
     this.recountTime()
     this.counterHandler = setInterval(() => this.recountTime(), 1000)
@@ -42,7 +65,6 @@ export default class Countdown {
     }
 
     this.events[name].push(callback)
-    console.log('events:', this.events)
   }
 
   dispatchEvent (name, args) {
@@ -60,7 +82,8 @@ export default class Countdown {
   }
 
   setElementValue (name, value) {
-    this.elements[name].element.innerHTML = value
+    const number = this.elements[name].element.querySelector('div')
+    number.textContent = value
   }
 
   recountTime () {
@@ -93,17 +116,3 @@ export default class Countdown {
     this.setElementValue('seconds', seconds)
   }
 }
-
-// google.maps.event.addDomListener(window, 'load', function () {
-//   var Map = createMap({
-//     elementId: 'countdown-map',
-//     disableDefaultUI: true
-//   })
-//   var Countdown = createCountdown()
-//   var meta = new Date(2018, 6, 14, 11)
-//   var oneDayMilliseconds = 86400000
-//   var beginOfYear = new Date(meta.getFullYear(), 0, 0)
-//   var metaDaysNumberDiff = meta - beginOfYear
-//   var metaDayNumberInYear = Math.floor(metaDaysNumberDiff / oneDayMilliseconds)
-//   Map.route.initCountdown()
-// })

@@ -10,28 +10,70 @@ Object {
 `;
 
 exports[`Countdown should construct MapCountdown in provided container 1`] = `
-<div
-  id="countdown"
->
+<div>
   <div
-    data-testid="map-countdown-days"
+    class="map-countdown__countdown"
   >
-    27
-  </div>
-  <div
-    data-testid="map-countdown-hours"
-  >
-    10
-  </div>
-  <div
-    data-testid="map-countdown-minutes"
-  >
-    0
-  </div>
-  <div
-    data-testid="map-countdown-seconds"
-  >
-    0
+    <div
+      class="map-countdown__item"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--days"
+        data-testid="map-countdown-days"
+      >
+        27
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Dni
+      </h4>
+    </div>
+    <div
+      class="map-countdown__item"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--hours"
+        data-testid="map-countdown-hours"
+      >
+        10
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Godzin
+      </h4>
+    </div>
+    <div
+      class="map-countdown__item"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--minutes"
+        data-testid="map-countdown-minutes"
+      >
+        0
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Minut
+      </h4>
+    </div>
+    <div
+      class="map-countdown__item"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--seconds"
+        data-testid="map-countdown-seconds"
+      >
+        0
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Sekund
+      </h4>
+    </div>
   </div>
 </div>
 `;
