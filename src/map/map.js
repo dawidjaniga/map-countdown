@@ -17,7 +17,7 @@ const COLORS = {
   ROUTE_6: '#2980B9'
 }
 export default class Map {
-  constructor ({ key, selector, options }) {
+  constructor ({ key, containerElement, options }) {
     this.key = key
     this.callback = '__MapCountdownLoadMap'
     this.libraries = ['drawing']
@@ -26,10 +26,13 @@ export default class Map {
     this.minutesPolyline = {}
     this.hoursPolyline = {}
     this.daysPolyline = {}
+    this.mapContainer = document.createElement('div')
+    this.mapContainer.classList.add('map-countdown__map')
+    containerElement.appendChild(this.mapContainer)
 
     window[this.callback] = () => {
       delete window[this.callback]
-      this.loadMap(selector, options)
+      this.loadMap(this.mapContainer, options)
       this.initPolygons()
     }
 
@@ -54,23 +57,30 @@ export default class Map {
     return script
   }
 
-  loadMap (mapContainerSelector, options = {}) {
+  getMapContainer () {
+    return this.mapContainer
+  }
+
+  loadMap (mapContainer, options = {}) {
     const defaultOptions = {
       zoom: 14,
       center: {
-        lat: 53.79061631330304,
-        lng: 17.242156863212585
+        lat: 53.79564218580562,
+        lng: 17.285329699516296
       },
       backgroundColor: COLORS.MAP_BACKGROUND,
-      mapTypeId: 'terrain',
+      mapTypeId: 'roadmap',
       scrollwheel: false,
-      styles: mapStyle
+      styles: mapStyle,
+      disableDefaultUI: true
     }
 
-    this.map = new google.maps.Map(
-      document.querySelector(mapContainerSelector),
-      { ...defaultOptions, ...options }
-    )
+    this.map = new google.maps.Map(mapContainer, {
+      ...defaultOptions,
+      ...options
+    })
+
+    window.map = this.map
   }
 
   initPolygons () {

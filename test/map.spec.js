@@ -30,18 +30,17 @@ describe('Map', () => {
   const key = 'google-generated-api-key'
   const callback = '__MapCountdownLoadMap'
   const libraries = ['drawing']
-  const mapId = 'map'
-  const selector = `#${mapId}`
   const defaultOptions = {
     zoom: 14,
     center: {
-      lat: 53.79061631330304,
-      lng: 17.242156863212585
+      lat: 53.79564218580562,
+      lng: 17.285329699516296
     },
     backgroundColor: COLORS.MAP_BACKGROUND,
-    mapTypeId: 'terrain',
+    mapTypeId: 'roadmap',
     scrollwheel: false,
-    styles: mapStyle
+    styles: mapStyle,
+    disableDefaultUI: true
   }
   const options = {
     center: {
@@ -61,18 +60,18 @@ describe('Map', () => {
   })
 
   it('should append Google Maps script to body', () => {
+    const containerElement = document.createElement('div')
     const src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=${callback}&libraries=${libraries}`
-    new Map({ key, callback, libraries }) // eslint-disable-line no-new
+    new Map({ key, callback, containerElement }) // eslint-disable-line no-new
 
     expect(document.scripts).toContainEqual(expect.objectContaining({ src }))
   })
 
   it('loadMap() should load Google Map with default options into container', () => {
-    const map = new Map({ key })
+    const containerElement = document.createElement('div')
+    const map = new Map({ key, containerElement })
     const mapElement = document.createElement('div')
-    mapElement.setAttribute('id', mapId)
-    document.body.appendChild(mapElement)
-    map.loadMap(selector)
+    map.loadMap(mapElement)
 
     expect(global.window.google.maps.Map).toHaveBeenCalledTimes(1)
     expect(global.window.google.maps.Map.mock.instances.length).toBe(1)
@@ -82,11 +81,10 @@ describe('Map', () => {
   })
 
   it('loadMap() should load Google Map with merged options into container', () => {
-    const map = new Map({ key })
+    const containerElement = document.createElement('div')
+    const map = new Map({ key, containerElement })
     const mapElement = document.createElement('div')
-    mapElement.setAttribute('id', mapId)
-    document.body.appendChild(mapElement)
-    map.loadMap(selector, options)
+    map.loadMap(mapElement, options)
 
     expect(global.window.google.maps.Map).toHaveBeenCalledTimes(1)
     expect(global.window.google.maps.Map.mock.instances.length).toBe(1)
@@ -97,19 +95,28 @@ describe('Map', () => {
   })
 
   it('Google Maps callback should invoke loadMap() and destroy itself', () => {
-    const map = new Map({ key, selector, options }) // eslint-disable-line no-unused-vars
+    const containerElement = document.createElement('div')
+    const map = new Map({ key, options, containerElement }) // eslint-disable-line no-unused-vars
     const spy = jest.spyOn(map, 'loadMap')
 
     expect(window[callback]).toBeDefined()
     window[callback]()
     expect(window[callback]).not.toBeDefined()
     expect(spy).toHaveBeenCalledTimes(1)
-    expect(spy).toHaveBeenLastCalledWith(selector, options)
+    expect(spy).toHaveBeenLastCalledWith(map.getMapContainer(), options)
   })
 
   it('setRoutePoints() should set route points', () => {
-    const map = new Map({ key })
+    const containerElement = document.createElement('div')
+    const map = new Map({ key, containerElement })
     map.setRoutePoints(routePoints)
+
+    expect(map.getRoutePoints()).toEqual(routePoints)
+  })
+
+  it.skip('updatePolygons() should update polygons', () => {
+    const map = new Map({ key })
+    map.updatePolygons(0.5, 0.5, 0.5, 0.5)
 
     expect(map.getRoutePoints()).toEqual(routePoints)
   })

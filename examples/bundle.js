@@ -82,11 +82,14 @@ var MapCountdown = (function () {
   var Countdown =
   /*#__PURE__*/
   function () {
-    function Countdown(containerSelector) {
+    function Countdown(containerElement) {
       var _this = this;
 
       _classCallCheck(this, Countdown);
 
+      this.containerElement = containerElement;
+      this.countdownContainer = document.createElement('div');
+      this.countdownContainer.classList.add('map-countdown__countdown');
       this.meta = new Date(2019, 6, 13, 11);
       this.oneDayMilliseconds = 86400000;
       this.beginOfYear = new Date(this.meta.getFullYear(), 0, 0);
@@ -94,27 +97,43 @@ var MapCountdown = (function () {
       this.metaDayNumberInYear = Math.floor(this.metaDaysNumberDiff / this.oneDayMilliseconds);
       this.elements = {
         days: {
-          testId: 'map-countdown-days'
+          testId: 'map-countdown-days',
+          text: 'Dni'
         },
         hours: {
-          testId: 'map-countdown-hours'
+          testId: 'map-countdown-hours',
+          text: 'Godzin'
         },
         minutes: {
-          testId: 'map-countdown-minutes'
+          testId: 'map-countdown-minutes',
+          text: 'Minut'
         },
         seconds: {
-          testId: 'map-countdown-seconds'
+          testId: 'map-countdown-seconds',
+          text: 'Sekund'
         }
       };
-      this.containerEl = document.querySelector(containerSelector);
       var fragment = document.createDocumentFragment();
-      Object.values(this.elements).forEach(function (item) {
-        var element = _this.createElement('div', item.testId);
+      Object.keys(this.elements).forEach(function (itemName) {
+        var elementFragment = document.createDocumentFragment();
+        var item = _this.elements[itemName];
+        var element = document.createElement('div');
 
+        var number = _this.createElement('div', item.testId);
+
+        var text = document.createElement('h4');
+        element.classList.add('map-countdown__item');
+        text.classList.add('map-countdown__label');
+        text.textContent = item.text;
+        elementFragment.appendChild(element);
+        element.appendChild(number);
+        element.appendChild(text);
+        number.classList.add('map-countdown__number', "map-countdown__number--".concat(itemName));
+        fragment.appendChild(elementFragment);
         item.element = element;
-        fragment.appendChild(element);
       });
-      this.containerEl.appendChild(fragment);
+      this.countdownContainer.appendChild(fragment);
+      this.containerElement.appendChild(this.countdownContainer);
       this.events = {};
       this.recountTime();
       this.counterHandler = setInterval(function () {
@@ -130,7 +149,6 @@ var MapCountdown = (function () {
         }
 
         this.events[name].push(callback);
-        console.log('events:', this.events);
       }
     }, {
       key: "dispatchEvent",
@@ -153,7 +171,8 @@ var MapCountdown = (function () {
     }, {
       key: "setElementValue",
       value: function setElementValue(name, value) {
-        this.elements[name].element.innerHTML = value;
+        var number = this.elements[name].element.querySelector('div');
+        number.textContent = value;
       }
     }, {
       key: "recountTime",
@@ -184,7 +203,7 @@ var MapCountdown = (function () {
     }]);
 
     return Countdown;
-  }(); // google.maps.event.addDomListener(window, 'load', function () {
+  }();
 
   var mapStyle = [{
     featureType: 'all',
@@ -321,7 +340,7 @@ var MapCountdown = (function () {
       var _this = this;
 
       var key = _ref.key,
-          selector = _ref.selector,
+          containerElement = _ref.containerElement,
           options = _ref.options;
 
       _classCallCheck(this, Map);
@@ -334,11 +353,14 @@ var MapCountdown = (function () {
       this.minutesPolyline = {};
       this.hoursPolyline = {};
       this.daysPolyline = {};
+      this.mapContainer = document.createElement('div');
+      this.mapContainer.classList.add('map-countdown__map');
+      containerElement.appendChild(this.mapContainer);
 
       window[this.callback] = function () {
         delete window[_this.callback];
 
-        _this.loadMap(selector, options);
+        _this.loadMap(_this.mapContainer, options);
 
         _this.initPolygons();
       };
@@ -361,21 +383,28 @@ var MapCountdown = (function () {
         return script;
       }
     }, {
+      key: "getMapContainer",
+      value: function getMapContainer() {
+        return this.mapContainer;
+      }
+    }, {
       key: "loadMap",
-      value: function loadMap(mapContainerSelector) {
+      value: function loadMap(mapContainer) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
         var defaultOptions = {
           zoom: 14,
           center: {
-            lat: 53.79061631330304,
-            lng: 17.242156863212585
+            lat: 53.79564218580562,
+            lng: 17.285329699516296
           },
           backgroundColor: COLORS.MAP_BACKGROUND,
-          mapTypeId: 'terrain',
+          mapTypeId: 'roadmap',
           scrollwheel: false,
-          styles: mapStyle
+          styles: mapStyle,
+          disableDefaultUI: true
         };
-        this.map = new google.maps.Map(document.querySelector(mapContainerSelector), _objectSpread({}, defaultOptions, options));
+        this.map = new google.maps.Map(mapContainer, _objectSpread({}, defaultOptions, options));
+        window.map = this.map;
       }
     }, {
       key: "initPolygons",
@@ -420,10 +449,10 @@ var MapCountdown = (function () {
         var minutesPath = [];
         var secondsPath = [];
         this.routePoints.forEach(function (point) {
-          var distance = point.DistanceMeters[0];
+          var distance = point.DistanceMeters;
           var position = new google.maps.LatLng({
-            lat: parseFloat(point.Position[0].LatitudeDegrees[0]),
-            lng: parseFloat(point.Position[0].LongitudeDegrees[0])
+            lat: parseFloat(point.Position.LatitudeDegrees),
+            lng: parseFloat(point.Position.LongitudeDegrees)
           });
           var secondsMeters = parseFloat((1 - seconds) * maxDistance);
           var minutesMeters = parseFloat((1 - minutes) * maxDistance);
@@ -456,25 +485,63 @@ var MapCountdown = (function () {
     return Map;
   }();
 
+  function styleInject(css, ref) {
+    if ( ref === void 0 ) ref = {};
+    var insertAt = ref.insertAt;
+
+    if (!css || typeof document === 'undefined') { return; }
+
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var style = document.createElement('style');
+    style.type = 'text/css';
+
+    if (insertAt === 'top') {
+      if (head.firstChild) {
+        head.insertBefore(style, head.firstChild);
+      } else {
+        head.appendChild(style);
+      }
+    } else {
+      head.appendChild(style);
+    }
+
+    if (style.styleSheet) {
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
+  }
+
+  var css = ".map-countdown {\n\tposition: relative;\n    pointer-events: none;\n}\n\n.map-countdown__countdown {\n    position: absolute;\n    display: flex;\n    align-items: center;\n    justify-content: space-around;\n    z-index: 100;\n    width: 100%;\n    height: 100%;\n}\n\n.map-countdown__item {\n\twidth: 12%;\n}\n.map-countdown__number {\n\tcolor: #FFF;\n\tfont-size: 50pt;\n\tfont-family: 'Raleway', sans-serif;\n\tborder-bottom: 2px solid;\n\tfont-weight: 500;\n}\n.map-countdown__number--days {\n\tborder-color: #202808;\n}\n.map-countdown__number--hours {\n\tborder-color: #643627;\n}\n.map-countdown__number--minutes {\n\tborder-color: #822d76;\n}\n.map-countdown__number--seconds {\n\tborder-color: #afd02a;\n}\n.map-countdown__label {\n\tcolor: #FFF;\n    text-transform: uppercase;\n    font-weight: 100;\n    margin-top: 10%;\n    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;\n}\n\n.map-countdown__map {\n    width: 100vw;\n    height: 100vh;\n}";
+  styleInject(css);
+
   var MapCountdown =
   /*#__PURE__*/
   function () {
     function MapCountdown(_ref) {
       var selector = _ref.selector,
-          routePoints = _ref.routePoints;
+          routePoints = _ref.routePoints,
+          key = _ref.key;
 
       _classCallCheck(this, MapCountdown);
 
-      this.countdown = new Countdown(selector);
+      this.containerElement = document.querySelector(selector);
+      this.containerElement.classList.add('map-countdown');
+      this.countdown = new Countdown(this.containerElement);
       this.map = new Map({
-        key: 'AIzaSyCYkWHZM0ZdO1JeJGBqo44wLlQz31lh-zM',
-        selector: '#map'
+        key: key,
+        containerElement: this.containerElement
       });
       this.map.setRoutePoints(routePoints);
-      this.countdown.addEventListener('countdown:recount', this.updateMap.bind(this));
+      this.attachEvents();
     }
 
     _createClass(MapCountdown, [{
+      key: "attachEvents",
+      value: function attachEvents() {
+        this.countdown.addEventListener('countdown:recount', this.updateMap.bind(this));
+      }
+    }, {
       key: "updateMap",
       value: function updateMap(ratios) {
         var _this$map;

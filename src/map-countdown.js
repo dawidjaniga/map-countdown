@@ -1,14 +1,20 @@
 import Countdown from './countdown'
 import Map from './map/map'
+import './style.css'
 
 export default class MapCountdown {
   constructor ({ selector, routePoints, key }) {
-    this.countdown = new Countdown(selector)
+    this.containerElement = document.querySelector(selector)
+    this.containerElement.classList.add('map-countdown')
+    this.countdown = new Countdown(this.containerElement)
     this.map = new Map({
       key,
-      selector: '#map'
+      containerElement: this.containerElement
     })
     this.map.setRoutePoints(routePoints)
+    this.attachEvents()
+  }
+  attachEvents () {
     this.countdown.addEventListener(
       'countdown:recount',
       this.updateMap.bind(this)

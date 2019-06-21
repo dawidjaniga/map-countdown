@@ -11,20 +11,16 @@
         window.addEventListener('DOMContentLoaded', function () {
             var countdown = new MapCountdown({
                 selector: '#countdown',
-                routePoints
+                key: 'google_api_key',
+                routePoints: routePoints
             })
         })
     </script>
     <style>
-        #countdown {
-            position: fixed;
-            z-index: 100;
-            color: white;
-        }
+        html,
+        body {
+            margin: 0;
 
-        #map {
-            width: 100vw;
-            height: 100vh;
         }
     </style>
 </head>
@@ -32,7 +28,6 @@
 <body>
 
     <div id="countdown"></div>
-    <div id="map"></div>
 
 </body>
 
