@@ -9,6 +9,7 @@
   "scripts": {
     "test": "standard && TZ=utc jest test",
     "test:watch": "TZ=utc jest test --watch",
+    "test:update": "TZ=utc jest -u",
     "prebuild": "rm -rf dist",
     "build": "rollup -c",
     "build:cli": "rollup -c rollup.config.bin.js",

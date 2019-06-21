@@ -36,7 +36,7 @@ exports[`Countdown should construct MapCountdown in provided container 1`] = `
         class="map-countdown__number map-countdown__number--hours"
         data-testid="map-countdown-hours"
       >
-        10
+        11
       </div>
       <h4
         class="map-countdown__label"
