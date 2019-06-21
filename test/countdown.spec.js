@@ -7,7 +7,7 @@ const originalDocument = cloneDeep(document)
 
 /* eslint-disable no-global-assign */
 describe('Countdown', () => {
-  MockDate.set('2019-06-16', 0)
+  MockDate.set('2019-06-16')
 
   afterEach(() => {
     restoreDocument()
