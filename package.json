@@ -37,7 +37,8 @@
   "standard": {
     "ignore": [
       "dist",
-      "examples"
+      "examples",
+      "bin"
     ]
   },
   "jest": {
