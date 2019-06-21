@@ -1,8 +1,8 @@
 import resolve from 'rollup-plugin-node-resolve'
 import babel from 'rollup-plugin-babel'
+import postcss from 'rollup-plugin-postcss'
 import serve from 'rollup-plugin-serve'
 import livereload from 'rollup-plugin-livereload'
-
 import pkg from './package.json'
 
 export default {
@@ -23,6 +23,7 @@ export default {
       presets: [['@babel/env', { modules: false }]],
       exclude: 'node_modules/**'
     }),
+    postcss(),
     livereload('examples'),
     serve({
       open: true,
