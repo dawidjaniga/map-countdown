@@ -82,8 +82,10 @@ var MapCountdown = (function () {
   var Countdown =
   /*#__PURE__*/
   function () {
-    function Countdown(containerElement) {
+    function Countdown(_ref) {
       var _this = this;
+
+      var containerElement = _ref.containerElement;
 
       _classCallCheck(this, Countdown);
 
@@ -527,7 +529,9 @@ var MapCountdown = (function () {
 
       this.containerElement = document.querySelector(selector);
       this.containerElement.classList.add('map-countdown');
-      this.countdown = new Countdown(this.containerElement);
+      this.countdown = new Countdown({
+        containerElement: this.containerElement
+      });
       this.map = new Map({
         key: key,
         containerElement: this.containerElement

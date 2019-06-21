@@ -1,5 +1,5 @@
 export default class Countdown {
-  constructor (containerElement) {
+  constructor ({ containerElement }) {
     this.containerElement = containerElement
     this.countdownContainer = document.createElement('div')
     this.countdownContainer.classList.add('map-countdown__countdown')

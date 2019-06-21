@@ -6,7 +6,7 @@ export default class MapCountdown {
   constructor ({ selector, routePoints, key }) {
     this.containerElement = document.querySelector(selector)
     this.containerElement.classList.add('map-countdown')
-    this.countdown = new Countdown(this.containerElement)
+    this.countdown = new Countdown({ containerElement: this.containerElement })
     this.map = new Map({
       key,
       containerElement: this.containerElement

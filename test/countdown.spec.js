@@ -14,15 +14,15 @@ describe('Countdown', () => {
   })
 
   it('should construct MapCountdown in provided container', () => {
-    const container = document.createElement('div')
-    const countdown = new Countdown(container)
+    const containerElement = document.createElement('div')
+    const countdown = new Countdown({ containerElement })
     expect(countdown).toBeDefined()
-    expect(container).toMatchSnapshot()
+    expect(containerElement).toMatchSnapshot()
   })
 
   it('should start timer', () => {
     const containerElement = document.createElement('div')
-    const countdown = new Countdown(containerElement)
+    const countdown = new Countdown({ containerElement })
     const elementName = 'hours'
     const value = 10
     countdown.setElementValue(elementName, value)
@@ -50,7 +50,7 @@ describe('Countdown', () => {
   it('should start setInterval', () => {
     jest.useFakeTimers()
     const containerElement = document.createElement('div')
-    new Countdown(containerElement) // eslint-disable-line no-new
+    new Countdown({ containerElement }) // eslint-disable-line no-new
 
     expect(setInterval).toHaveBeenCalledTimes(1)
     expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000)
