@@ -36,7 +36,8 @@
   },
   "standard": {
     "ignore": [
-      "dist"
+      "dist",
+      "examples"
     ]
   },
   "jest": {
