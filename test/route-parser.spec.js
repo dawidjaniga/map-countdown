@@ -3,17 +3,16 @@ import path from 'path'
 import RouteParser from '../src/route-parser'
 import * as CLI from '../src/bin/route-parser'
 import fs from 'fs'
-import cloneDeep from 'lodash/cloneDeep'
 
 describe('route-parser', () => {
-  const writeFileSyncOriginal = cloneDeep(fs.writeFileSync)
+  let spiedWriteFileSync
 
   beforeEach(() => {
-    fs.writeFileSync = jest.fn()
+    spiedWriteFileSync = jest.spyOn(fs, 'writeFileSync').mockImplementation()
   })
 
   afterAll(() => {
-    fs.writeFileSync = cloneDeep(writeFileSyncOriginal)
+    spiedWriteFileSync.mockRestore()
   })
 
   describe('parse()', () => {
@@ -45,10 +44,9 @@ describe('route-parser', () => {
       const resolvedFilePath = path.resolve(outputFilePath)
       const data = { key: 'sampleData' }
       const encoding = 'utf8'
-      jest.spyOn(fs, 'writeFileSync')
       routeParser.saveFile(outputFilePath, data)
-      expect(fs.writeFileSync).toHaveBeenCalledTimes(1)
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(spiedWriteFileSync).toHaveBeenCalledTimes(2)
+      expect(spiedWriteFileSync).toHaveBeenCalledWith(
         resolvedFilePath,
         data,
         encoding
