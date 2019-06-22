@@ -8,6 +8,9 @@
 ## Overview
 MapCountdown is a JavaScript browser library which shows countdown with additional route filling on a map. It uses Google Map to draw polygons from provided paths and animates them according to time left.
 
+## Demo
+![Demo](./assets/map-countdown-demo.gif)
+
 
 ## Usage
 
