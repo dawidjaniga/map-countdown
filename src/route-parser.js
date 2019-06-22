@@ -1,19 +1,26 @@
 import fs from 'fs'
+import path from 'path'
 import parser from 'xml2json'
 
 export default class RouteParser {
-  constructor (file) {
+  constructor (file, outputFilePath) {
     this.file = file
+    this.outputFilePath = outputFilePath
   }
 
   parse () {
     const parsedFile = this.parseFileToJson(this.file)
-    return this.parsePoints(parsedFile)
+    this.saveFile(this.outputFilePath, this.parsePoints(parsedFile))
   }
 
   parseFileToJson (file) {
     const xml = fs.readFileSync(file, 'utf8')
     return JSON.parse(parser.toJson(xml))
+  }
+
+  saveFile (file, data) {
+    const a = path.resolve(file)
+    return fs.writeFileSync(a, data, 'utf8')
   }
 
   parsePoints (parsedFile) {
