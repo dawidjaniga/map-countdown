@@ -10,7 +10,7 @@ export default {
   output: [
     {
       file: 'examples/bundle.js',
-      format: 'iife',
+      format: 'umd',
       name: 'MapCountdown'
     }
   ],
