@@ -1,7 +1,7 @@
 {
   "name": "map-countdown",
   "main": "./dist/bundle.js",
-  "version": "0.0.1",
+  "version": "0.0.0-development",
   "description": "Display the countdown on a map via polygons",
   "repository": "git@github.com:dawidjaniga/map-countdown.git",
   "author": "Dawid Janiga <dawidjaniga@gmail.com>",
@@ -15,7 +15,8 @@
     "build:watch": "rollup -c rollup.config.dist.js -w",
     "build:cli": "rollup -c rollup.config.bin.js",
     "dev": "rollup -c -w",
-    "dev:lib": "nodemon dist/ -x 'yalc push'"
+    "dev:lib": "nodemon dist/ -x 'yalc push'",
+    "semantic-release": "semantic-release"
   },
   "files": [
     "dist"
@@ -37,6 +38,7 @@
     "rollup-plugin-node-resolve": "5.0.3",
     "rollup-plugin-postcss": "2.0.3",
     "rollup-plugin-serve": "1.0.1",
+    "semantic-release": "15.13.16",
     "standard": "12.0.1",
     "xml2json": "0.11.2"
   },
@@ -55,6 +57,7 @@
     "collectCoverage": true
   },
   "dependencies": {
-    "lodash": "4.17.11"
+    "lodash": "4.17.11",
+    "semantic-release-cli": "5.1.1"
   }
 }
