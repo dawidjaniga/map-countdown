@@ -1,7 +1,7 @@
 # MapCountdown
 
 [![Build Status](https://travis-ci.org/dawidjaniga/map-countdown.svg?branch=master)](https://travis-ci.org/dawidjaniga/map-countdown)
-[![Coverage Status](https://img.shields.io/codecov/c/github/dawidjaniga/map-countdown.svg)](asd)
+[![Coverage Status](https://img.shields.io/codecov/c/github/dawidjaniga/map-countdown.svg)](asd) [![Greenkeeper badge](https://badges.greenkeeper.io/dawidjaniga/map-countdown.svg)](https://greenkeeper.io/)
 ![Build Status](https://img.shields.io/david/dawidjaniga/map-countdown.svg)
 
 
