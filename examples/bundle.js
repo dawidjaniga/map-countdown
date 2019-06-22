@@ -79,60 +79,80 @@ var MapCountdown = (function () {
     throw new TypeError("Invalid attempt to spread non-iterable instance");
   }
 
+  var defaultTranslations = {
+    days: {
+      one: 'Day',
+      many: 'Days'
+    },
+    hours: {
+      one: 'Hour',
+      many: 'Hours'
+    },
+    minutes: {
+      one: 'Minute',
+      many: 'Minutes'
+    },
+    seconds: {
+      one: 'Second',
+      many: 'Seconds'
+    },
+    afterCountdown: 'The event has already took place'
+  };
+
   var Countdown =
   /*#__PURE__*/
   function () {
     function Countdown(_ref) {
       var _this = this;
 
-      var containerElement = _ref.containerElement;
+      var containerElement = _ref.containerElement,
+          meta = _ref.meta,
+          translations = _ref.translations;
 
       _classCallCheck(this, Countdown);
 
       this.containerElement = containerElement;
+      this.translations = _objectSpread({}, defaultTranslations, translations);
       this.countdownContainer = document.createElement('div');
       this.countdownContainer.classList.add('map-countdown__countdown');
-      this.meta = new Date(2019, 6, 13, 11);
+      this.meta = new Date(meta);
       this.oneDayMilliseconds = 86400000;
       this.beginOfYear = new Date(this.meta.getFullYear(), 0, 0);
       this.metaDaysNumberDiff = this.meta - this.beginOfYear;
       this.metaDayNumberInYear = Math.floor(this.metaDaysNumberDiff / this.oneDayMilliseconds);
       this.elements = {
         days: {
-          testId: 'map-countdown-days',
-          text: 'Dni'
+          testId: 'map-countdown-days'
         },
         hours: {
-          testId: 'map-countdown-hours',
-          text: 'Godzin'
+          testId: 'map-countdown-hours'
         },
         minutes: {
-          testId: 'map-countdown-minutes',
-          text: 'Minut'
+          testId: 'map-countdown-minutes'
         },
         seconds: {
-          testId: 'map-countdown-seconds',
-          text: 'Sekund'
+          testId: 'map-countdown-seconds'
         }
       };
       var fragment = document.createDocumentFragment();
       Object.keys(this.elements).forEach(function (itemName) {
         var elementFragment = document.createDocumentFragment();
         var item = _this.elements[itemName];
-        var element = document.createElement('div');
 
-        var number = _this.createElement('div', item.testId);
+        var element = _this.createElement('div', item.testId);
 
-        var text = document.createElement('h4');
+        var number = document.createElement('div');
+        var label = document.createElement('h4');
         element.classList.add('map-countdown__item');
-        text.classList.add('map-countdown__label');
-        text.textContent = item.text;
+        label.classList.add('map-countdown__label');
         elementFragment.appendChild(element);
         element.appendChild(number);
-        element.appendChild(text);
+        element.appendChild(label);
         number.classList.add('map-countdown__number', "map-countdown__number--".concat(itemName));
         fragment.appendChild(elementFragment);
         item.element = element;
+        item.number = number;
+        item.label = label;
       });
       this.countdownContainer.appendChild(fragment);
       this.containerElement.appendChild(this.countdownContainer);
@@ -173,34 +193,54 @@ var MapCountdown = (function () {
     }, {
       key: "setElementValue",
       value: function setElementValue(name, value) {
-        var number = this.elements[name].element.querySelector('div');
-        number.textContent = value;
+        var element = this.elements[name];
+        var translations = this.translations[name];
+        var label = value === 1 ? translations.one : translations.many;
+        element.number.textContent = value;
+        element.label.textContent = label;
       }
     }, {
       key: "recountTime",
       value: function recountTime() {
         var now = new Date();
-        var diff = new Date(this.meta - now);
+        var timeLeft = this.meta - now;
+        var countdownFinished = timeLeft < 0;
+        var timeLeftDate = new Date(timeLeft);
         var daysNumberDiff = new Date(now - this.beginOfYear);
         var currentDayNumberInYear = Math.floor(daysNumberDiff / this.oneDayMilliseconds);
-        var days = this.metaDayNumberInYear - currentDayNumberInYear;
-        var hours = diff.getHours();
-        var minutes = diff.getMinutes();
-        var seconds = diff.getSeconds();
-        var daysRatio = currentDayNumberInYear / this.metaDayNumberInYear;
-        var hoursRatio = diff.getHours() / 24;
-        var minutesRatio = diff.getMinutes() / 60;
-        var secondsRatio = diff.getSeconds() / 60;
-        this.dispatchEvent('countdown:recount', {
-          days: daysRatio,
-          hours: hoursRatio,
-          minutes: minutesRatio,
-          seconds: secondsRatio
-        });
-        this.setElementValue('days', days);
-        this.setElementValue('hours', hours);
-        this.setElementValue('minutes', minutes);
-        this.setElementValue('seconds', seconds);
+
+        if (countdownFinished) {
+          this.finishCountdown();
+        } else {
+          var days = this.metaDayNumberInYear - currentDayNumberInYear;
+          var hours = timeLeftDate.getHours();
+          var minutes = timeLeftDate.getMinutes();
+          var seconds = timeLeftDate.getSeconds();
+          var daysRatio = currentDayNumberInYear / this.metaDayNumberInYear;
+          var hoursRatio = timeLeftDate.getHours() / 24;
+          var minutesRatio = timeLeftDate.getMinutes() / 60;
+          var secondsRatio = timeLeftDate.getSeconds() / 60;
+          this.dispatchEvent('countdown:recount', {
+            days: daysRatio,
+            hours: hoursRatio,
+            minutes: minutesRatio,
+            seconds: secondsRatio
+          });
+          this.setElementValue('days', days);
+          this.setElementValue('hours', hours);
+          this.setElementValue('minutes', minutes);
+          this.setElementValue('seconds', seconds);
+        }
+      }
+    }, {
+      key: "finishCountdown",
+      value: function finishCountdown() {
+        var afterCountdown = this.createElement('h2', 'map-countdown-title');
+        afterCountdown.classList.add('map-countdown__title');
+        afterCountdown.textContent = this.translations.afterCountdown;
+        clearInterval(this.counterHandler);
+        this.countdownContainer.innerHTML = '';
+        this.countdownContainer.appendChild(afterCountdown);
       }
     }]);
 
@@ -514,7 +554,7 @@ var MapCountdown = (function () {
     }
   }
 
-  var css = ".map-countdown {\n\tposition: relative;\n    pointer-events: none;\n}\n\n.map-countdown__countdown {\n    position: absolute;\n    display: flex;\n    align-items: center;\n    justify-content: space-around;\n    z-index: 100;\n    width: 100%;\n    height: 100%;\n}\n\n.map-countdown__item {\n\twidth: 12%;\n}\n.map-countdown__number {\n\tcolor: #FFF;\n\tfont-size: 50pt;\n\tfont-family: 'Raleway', sans-serif;\n\tborder-bottom: 2px solid;\n\tfont-weight: 500;\n}\n.map-countdown__number--days {\n\tborder-color: #202808;\n}\n.map-countdown__number--hours {\n\tborder-color: #643627;\n}\n.map-countdown__number--minutes {\n\tborder-color: #822d76;\n}\n.map-countdown__number--seconds {\n\tborder-color: #afd02a;\n}\n.map-countdown__label {\n\tcolor: #FFF;\n    text-transform: uppercase;\n    font-weight: 100;\n    margin-top: 10%;\n    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;\n}\n\n.map-countdown__map {\n    width: 100vw;\n    height: 100vh;\n}";
+  var css = ".map-countdown {\n\tposition: relative;\n    pointer-events: none;\n}\n\n.map-countdown__countdown {\n    position: absolute;\n    display: flex;\n    align-items: center;\n    justify-content: space-around;\n    z-index: 100;\n    width: 100%;\n    height: 100%;\n}\n\n.map-countdown__item {\n\twidth: 12%;\n}\n.map-countdown__number {\n\tcolor: #FFF;\n\tfont-size: 50pt;\n\tfont-family: 'Raleway', sans-serif;\n\tborder-bottom: 2px solid;\n\tfont-weight: 500;\n}\n.map-countdown__number--days {\n\tborder-color: #202808;\n}\n.map-countdown__number--hours {\n\tborder-color: #643627;\n}\n.map-countdown__number--minutes {\n\tborder-color: #822d76;\n}\n.map-countdown__number--seconds {\n\tborder-color: #afd02a;\n}\n.map-countdown__label {\n\tcolor: #FFF;\n    text-transform: uppercase;\n    font-weight: 100;\n    margin-top: 10%;\n    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;\n}\n\n.map-countdown__title {\n\tcolor: #FFF;\n    text-transform: uppercase;\n    font-weight: 100;\n    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;\n}\n\n.map-countdown__map {\n    width: 100vw;\n    height: 100vh;\n}";
   styleInject(css);
 
   var MapCountdown =
@@ -523,14 +563,18 @@ var MapCountdown = (function () {
     function MapCountdown(_ref) {
       var selector = _ref.selector,
           routePoints = _ref.routePoints,
-          key = _ref.key;
+          key = _ref.key,
+          meta = _ref.meta,
+          translations = _ref.translations;
 
       _classCallCheck(this, MapCountdown);
 
       this.containerElement = document.querySelector(selector);
       this.containerElement.classList.add('map-countdown');
       this.countdown = new Countdown({
-        containerElement: this.containerElement
+        containerElement: this.containerElement,
+        meta: meta,
+        translations: translations
       });
       this.map = new Map({
         key: key,

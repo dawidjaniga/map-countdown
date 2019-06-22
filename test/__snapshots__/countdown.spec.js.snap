@@ -9,17 +9,293 @@ Object {
 }
 `;
 
-exports[`Countdown should construct MapCountdown in provided container 1`] = `
+exports[`Countdown setElementValue() should render label "many" when value is greater than 1 1`] = `
 <div>
   <div
     class="map-countdown__countdown"
   >
     <div
       class="map-countdown__item"
+      data-testid="map-countdown-days"
     >
       <div
         class="map-countdown__number map-countdown__number--days"
-        data-testid="map-countdown-days"
+      >
+        27
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Days
+      </h4>
+    </div>
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-hours"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--hours"
+      >
+        5
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Hours
+      </h4>
+    </div>
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-minutes"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--minutes"
+      >
+        0
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Minutes
+      </h4>
+    </div>
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-seconds"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--seconds"
+      >
+        0
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Seconds
+      </h4>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Countdown setElementValue() should render label "one" when value is 1 1`] = `
+<div>
+  <div
+    class="map-countdown__countdown"
+  >
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-days"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--days"
+      >
+        27
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Days
+      </h4>
+    </div>
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-hours"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--hours"
+      >
+        1
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Hour
+      </h4>
+    </div>
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-minutes"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--minutes"
+      >
+        0
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Minutes
+      </h4>
+    </div>
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-seconds"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--seconds"
+      >
+        0
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Seconds
+      </h4>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Countdown should construct Countdown in provided container 1`] = `
+<div>
+  <div
+    class="map-countdown__countdown"
+  >
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-days"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--days"
+      >
+        27
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Days
+      </h4>
+    </div>
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-hours"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--hours"
+      >
+        11
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Hours
+      </h4>
+    </div>
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-minutes"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--minutes"
+      >
+        0
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Minutes
+      </h4>
+    </div>
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-seconds"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--seconds"
+      >
+        0
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Seconds
+      </h4>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Countdown should render default translations 1`] = `
+<div>
+  <div
+    class="map-countdown__countdown"
+  >
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-days"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--days"
+      >
+        27
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Days
+      </h4>
+    </div>
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-hours"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--hours"
+      >
+        11
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Hours
+      </h4>
+    </div>
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-minutes"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--minutes"
+      >
+        0
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Minutes
+      </h4>
+    </div>
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-seconds"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--seconds"
+      >
+        0
+      </div>
+      <h4
+        class="map-countdown__label"
+      >
+        Seconds
+      </h4>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Countdown should render passed translations 1`] = `
+<div>
+  <div
+    class="map-countdown__countdown"
+  >
+    <div
+      class="map-countdown__item"
+      data-testid="map-countdown-days"
+    >
+      <div
+        class="map-countdown__number map-countdown__number--days"
       >
         27
       </div>
@@ -31,10 +307,10 @@ exports[`Countdown should construct MapCountdown in provided container 1`] = `
     </div>
     <div
       class="map-countdown__item"
+      data-testid="map-countdown-hours"
     >
       <div
         class="map-countdown__number map-countdown__number--hours"
-        data-testid="map-countdown-hours"
       >
         11
       </div>
@@ -46,10 +322,10 @@ exports[`Countdown should construct MapCountdown in provided container 1`] = `
     </div>
     <div
       class="map-countdown__item"
+      data-testid="map-countdown-minutes"
     >
       <div
         class="map-countdown__number map-countdown__number--minutes"
-        data-testid="map-countdown-minutes"
       >
         0
       </div>
@@ -61,10 +337,10 @@ exports[`Countdown should construct MapCountdown in provided container 1`] = `
     </div>
     <div
       class="map-countdown__item"
+      data-testid="map-countdown-seconds"
     >
       <div
         class="map-countdown__number map-countdown__number--seconds"
-        data-testid="map-countdown-seconds"
       >
         0
       </div>

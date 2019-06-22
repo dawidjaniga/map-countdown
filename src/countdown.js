@@ -1,9 +1,30 @@
+const defaultTranslations = {
+  days: {
+    one: 'Day',
+    many: 'Days'
+  },
+  hours: {
+    one: 'Hour',
+    many: 'Hours'
+  },
+  minutes: {
+    one: 'Minute',
+    many: 'Minutes'
+  },
+  seconds: {
+    one: 'Second',
+    many: 'Seconds'
+  },
+  afterCountdown: 'The event has already took place'
+}
+
 export default class Countdown {
-  constructor ({ containerElement }) {
+  constructor ({ containerElement, meta, translations }) {
     this.containerElement = containerElement
+    this.translations = { ...defaultTranslations, ...translations }
     this.countdownContainer = document.createElement('div')
     this.countdownContainer.classList.add('map-countdown__countdown')
-    this.meta = new Date(2019, 6, 13, 11)
+    this.meta = new Date(meta)
     this.oneDayMilliseconds = 86400000
     this.beginOfYear = new Date(this.meta.getFullYear(), 0, 0)
     this.metaDaysNumberDiff = this.meta - this.beginOfYear
@@ -12,20 +33,16 @@ export default class Countdown {
     )
     this.elements = {
       days: {
-        testId: 'map-countdown-days',
-        text: 'Dni'
+        testId: 'map-countdown-days'
       },
       hours: {
-        testId: 'map-countdown-hours',
-        text: 'Godzin'
+        testId: 'map-countdown-hours'
       },
       minutes: {
-        testId: 'map-countdown-minutes',
-        text: 'Minut'
+        testId: 'map-countdown-minutes'
       },
       seconds: {
-        testId: 'map-countdown-seconds',
-        text: 'Sekund'
+        testId: 'map-countdown-seconds'
       }
     }
 
@@ -34,15 +51,14 @@ export default class Countdown {
     Object.keys(this.elements).forEach(itemName => {
       const elementFragment = document.createDocumentFragment()
       const item = this.elements[itemName]
-      const element = document.createElement('div')
-      const number = this.createElement('div', item.testId)
-      const text = document.createElement('h4')
+      const element = this.createElement('div', item.testId)
+      const number = document.createElement('div')
+      const label = document.createElement('h4')
       element.classList.add('map-countdown__item')
-      text.classList.add('map-countdown__label')
-      text.textContent = item.text
+      label.classList.add('map-countdown__label')
       elementFragment.appendChild(element)
       element.appendChild(number)
-      element.appendChild(text)
+      element.appendChild(label)
 
       number.classList.add(
         'map-countdown__number',
@@ -50,6 +66,8 @@ export default class Countdown {
       )
       fragment.appendChild(elementFragment)
       item.element = element
+      item.number = number
+      item.label = label
     })
 
     this.countdownContainer.appendChild(fragment)
@@ -82,37 +100,55 @@ export default class Countdown {
   }
 
   setElementValue (name, value) {
-    const number = this.elements[name].element.querySelector('div')
-    number.textContent = value
+    const element = this.elements[name]
+    const translations = this.translations[name]
+    const label = value === 1 ? translations.one : translations.many
+    element.number.textContent = value
+    element.label.textContent = label
   }
 
   recountTime () {
-    var now = new Date()
-    var diff = new Date(this.meta - now)
-    var daysNumberDiff = new Date(now - this.beginOfYear)
-    var currentDayNumberInYear = Math.floor(
+    const now = new Date()
+    const timeLeft = this.meta - now
+    const countdownFinished = timeLeft < 0
+    const timeLeftDate = new Date(timeLeft)
+    const daysNumberDiff = new Date(now - this.beginOfYear)
+    const currentDayNumberInYear = Math.floor(
       daysNumberDiff / this.oneDayMilliseconds
     )
 
-    var days = this.metaDayNumberInYear - currentDayNumberInYear
-    var hours = diff.getHours()
-    var minutes = diff.getMinutes()
-    var seconds = diff.getSeconds()
-    var daysRatio = currentDayNumberInYear / this.metaDayNumberInYear
-    var hoursRatio = diff.getHours() / 24
-    var minutesRatio = diff.getMinutes() / 60
-    var secondsRatio = diff.getSeconds() / 60
+    if (countdownFinished) {
+      this.finishCountdown()
+    } else {
+      const days = this.metaDayNumberInYear - currentDayNumberInYear
+      const hours = timeLeftDate.getHours()
+      const minutes = timeLeftDate.getMinutes()
+      const seconds = timeLeftDate.getSeconds()
+      const daysRatio = currentDayNumberInYear / this.metaDayNumberInYear
+      const hoursRatio = timeLeftDate.getHours() / 24
+      const minutesRatio = timeLeftDate.getMinutes() / 60
+      const secondsRatio = timeLeftDate.getSeconds() / 60
 
-    this.dispatchEvent('countdown:recount', {
-      days: daysRatio,
-      hours: hoursRatio,
-      minutes: minutesRatio,
-      seconds: secondsRatio
-    })
+      this.dispatchEvent('countdown:recount', {
+        days: daysRatio,
+        hours: hoursRatio,
+        minutes: minutesRatio,
+        seconds: secondsRatio
+      })
 
-    this.setElementValue('days', days)
-    this.setElementValue('hours', hours)
-    this.setElementValue('minutes', minutes)
-    this.setElementValue('seconds', seconds)
+      this.setElementValue('days', days)
+      this.setElementValue('hours', hours)
+      this.setElementValue('minutes', minutes)
+      this.setElementValue('seconds', seconds)
+    }
+  }
+
+  finishCountdown () {
+    const afterCountdown = this.createElement('h2', 'map-countdown-title')
+    afterCountdown.classList.add('map-countdown__title')
+    afterCountdown.textContent = this.translations.afterCountdown
+    clearInterval(this.counterHandler)
+    this.countdownContainer.innerHTML = ''
+    this.countdownContainer.appendChild(afterCountdown)
   }
 }
