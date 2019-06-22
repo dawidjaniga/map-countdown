@@ -16,15 +16,15 @@ MapCountdown is a JavaScript browser library which shows countdown with addition
 
 ### With module bundler - Webpack, Rollup, Parcel etc.
 1. Install
-```
+``` bash
 yarn install map-countdown
 ```
 or
-```
+``` bash
 npm install map-countdown
 ```
 2. Import MapCountdown
-```
+``` javascript
 import MapCountdown from 'map-countdown'
 import routePoints from './../path/to/routePoints'
 new Countdown({
@@ -38,8 +38,8 @@ new Countdown({
 ```
 
 ### Browser
-```
-<script type="text/javascript" src="unpkg.com/map-countdown">
+``` html
+<script type="text/javascript" src="unpkg.com/map-countdown"></script>
 <script src="routePoints.js"></script>
 <script>
     window.addEventListener('DOMContentLoaded', function () {
