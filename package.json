@@ -1,6 +1,9 @@
 {
   "name": "map-countdown",
   "main": "./dist/bundle.js",
+  "bin": {
+    "map-countdown": "./bin/route-parser.js"
+  },
   "version": "0.0.0-development",
   "description": "Display the countdown on a map via polygons",
   "repository": "git@github.com:dawidjaniga/map-countdown.git",
@@ -15,16 +18,17 @@
     "build:watch": "rollup -c rollup.config.dist.js -w",
     "build:cli": "rollup -c rollup.config.bin.js",
     "dev": "rollup -c -w",
-    "dev:lib": "nodemon dist/ -x 'yalc push'",
+    "dev:lib": "nodemon dist/ bin/ -x 'yalc push'",
     "semantic-release": "semantic-release"
   },
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
   "devDependencies": {
     "@babel/core": "7.4.5",
     "@babel/preset-env": "7.4.5",
-    "@testing-library/dom": "5.2.0",
+    "@testing-library/dom": "5.2.1",
     "babel-jest": "24.8.0",
     "jest": "24.8.0",
     "jest-dom": "3.5.0",
@@ -32,10 +36,10 @@
     "mockdate": "2.0.3",
     "nodemon": "1.19.1",
     "parcel": "1.12.3",
-    "rollup": "1.15.6",
-    "rollup-plugin-babel": "4.3.2",
+    "rollup": "1.16.2",
+    "rollup-plugin-babel": "4.3.3",
     "rollup-plugin-livereload": "1.0.1",
-    "rollup-plugin-node-resolve": "5.0.3",
+    "rollup-plugin-node-resolve": "5.0.4",
     "rollup-plugin-postcss": "2.0.3",
     "rollup-plugin-serve": "1.0.1",
     "semantic-release": "15.13.16",
