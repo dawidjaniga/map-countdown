@@ -9,7 +9,7 @@ export default {
       format: 'cjs'
     }
   ],
-  external: ['fs', ...Object.keys(pkg.devDependencies || {})],
+  external: ['fs', 'path', ...Object.keys(pkg.devDependencies || {})],
   plugins: [
     babel({
       babelrc: false,

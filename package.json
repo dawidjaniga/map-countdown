@@ -1,6 +1,9 @@
 {
   "name": "map-countdown",
   "main": "./dist/bundle.js",
+  "bin": {
+    "map-countdown": "./bin/route-parser.js"
+  },
   "version": "0.0.0-development",
   "description": "Display the countdown on a map via polygons",
   "repository": "git@github.com:dawidjaniga/map-countdown.git",
@@ -15,11 +18,12 @@
     "build:watch": "rollup -c rollup.config.dist.js -w",
     "build:cli": "rollup -c rollup.config.bin.js",
     "dev": "rollup -c -w",
-    "dev:lib": "nodemon dist/ -x 'yalc push'",
+    "dev:lib": "nodemon dist/ bin/ -x 'yalc push'",
     "semantic-release": "semantic-release"
   },
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
   "devDependencies": {
     "@babel/core": "7.4.5",
