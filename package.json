@@ -33,6 +33,7 @@
     "jest": "24.8.0",
     "jest-dom": "3.5.0",
     "jest-google-maps-mock": "1.0.1",
+    "lodash": "4.17.11",
     "mockdate": "2.0.3",
     "nodemon": "1.19.1",
     "parcel": "1.12.3",
@@ -59,9 +60,5 @@
       "./jest.setup.js"
     ],
     "collectCoverage": true
-  },
-  "dependencies": {
-    "lodash": "4.17.11",
-    "semantic-release-cli": "5.1.1"
   }
 }
