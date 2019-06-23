@@ -121,25 +121,21 @@ export default class Map {
 
   updatePolygons (days, hours, minutes, seconds) {
     const maxDistance = 10003
-    var daysPath = []
-
-    var hoursPath = []
-
-    var minutesPath = []
-
-    var secondsPath = []
+    const daysPath = []
+    const hoursPath = []
+    const minutesPath = []
+    const secondsPath = []
 
     this.routePoints.forEach(function (point) {
-      var distance = point.DistanceMeters
-      var position = new google.maps.LatLng({
+      const position = new google.maps.LatLng({
         lat: parseFloat(point.Position.LatitudeDegrees),
         lng: parseFloat(point.Position.LongitudeDegrees)
       })
-
-      var secondsMeters = parseFloat((1 - seconds) * maxDistance)
-      var minutesMeters = parseFloat((1 - minutes) * maxDistance)
-      var hoursMeters = parseFloat((1 - hours) * maxDistance)
-      var daysMeters = parseFloat((1 - days) * maxDistance)
+      const distance = point.DistanceMeters
+      const secondsMeters = parseFloat((1 - seconds) * maxDistance)
+      const minutesMeters = parseFloat((1 - minutes) * maxDistance)
+      const hoursMeters = parseFloat((1 - hours) * maxDistance)
+      const daysMeters = parseFloat((1 - days) * maxDistance)
 
       if (distance < secondsMeters) {
         secondsPath.push(position)
