@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MapCountdown should construct MapCountdown in provided container 1`] = `
+<body>
+  <div
+    class="map-countdown"
+    id="countdown"
+  />
+</body>
+`;

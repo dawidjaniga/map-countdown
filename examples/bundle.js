@@ -394,6 +394,7 @@
       this.callback = '__MapCountdownLoadMap';
       this.libraries = ['drawing'];
       this.routePoints = [];
+      this.maxDistance = 0;
       this.secondsPolyline = {};
       this.minutesPolyline = {};
       this.hoursPolyline = {};
@@ -479,6 +480,9 @@
       key: "setRoutePoints",
       value: function setRoutePoints(points) {
         this.routePoints = points;
+        this.maxDistance = Math.max.apply(Math, _toConsumableArray(points.map(function (point) {
+          return point.DistanceMeters;
+        })));
       }
     }, {
       key: "getRoutePoints",
@@ -494,11 +498,11 @@
         var minutesPath = [];
         var secondsPath = [];
         this.routePoints.forEach(function (point) {
-          var distance = point.DistanceMeters;
           var position = new google.maps.LatLng({
             lat: parseFloat(point.Position.LatitudeDegrees),
             lng: parseFloat(point.Position.LongitudeDegrees)
           });
+          var distance = point.DistanceMeters;
           var secondsMeters = parseFloat((1 - seconds) * maxDistance);
           var minutesMeters = parseFloat((1 - minutes) * maxDistance);
           var hoursMeters = parseFloat((1 - hours) * maxDistance);
@@ -530,6 +534,8 @@
     return Map;
   }();
 
+  var WINDOW_ROUTE_POINTS_KEY = '__MapCountdownRoutePoints';
+
   function styleInject(css, ref) {
     if ( ref === void 0 ) ref = {};
     var insertAt = ref.insertAt;
@@ -557,7 +563,7 @@
     }
   }
 
-  var css = ".map-countdown {\n\tposition: relative;\n    pointer-events: none;\n}\n\n.map-countdown__countdown {\n    position: absolute;\n    display: flex;\n    align-items: center;\n    justify-content: space-around;\n    z-index: 100;\n    width: 100%;\n    height: 100%;\n}\n\n.map-countdown__item {\n\twidth: 12%;\n}\n.map-countdown__number {\n\tcolor: #FFF;\n\tfont-size: 50pt;\n\tfont-family: 'Raleway', sans-serif;\n\tborder-bottom: 2px solid;\n\tfont-weight: 500;\n}\n.map-countdown__number--days {\n\tborder-color: #202808;\n}\n.map-countdown__number--hours {\n\tborder-color: #643627;\n}\n.map-countdown__number--minutes {\n\tborder-color: #822d76;\n}\n.map-countdown__number--seconds {\n\tborder-color: #afd02a;\n}\n.map-countdown__label {\n\tcolor: #FFF;\n    text-transform: uppercase;\n    font-weight: 100;\n    margin-top: 10%;\n    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;\n}\n\n.map-countdown__title {\n\tcolor: #FFF;\n    text-transform: uppercase;\n    font-weight: 100;\n    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;\n}\n\n.map-countdown__map {\n    width: 100%;\n    height: 100%;\n    /* min-height: 35vh; */\n}";
+  var css = ".map-countdown {\n\tposition: relative;\n    pointer-events: none;\n}\n\n.map-countdown__countdown {\n    position: absolute;\n    display: flex;\n    align-items: center;\n    justify-content: space-around;\n    z-index: 100;\n    width: 100%;\n    height: 100%;\n}\n\n.map-countdown__item {\n\twidth: 12%;\n}\n.map-countdown__number {\n\tcolor: #FFF;\n\tfont-size: 50pt;\n\tfont-family: 'Raleway', sans-serif;\n\tborder-bottom: 2px solid;\n\tfont-weight: 500;\n}\n.map-countdown__number--days {\n\tborder-color: #202808;\n}\n.map-countdown__number--hours {\n\tborder-color: #643627;\n}\n.map-countdown__number--minutes {\n\tborder-color: #822d76;\n}\n.map-countdown__number--seconds {\n\tborder-color: #afd02a;\n}\n.map-countdown__label {\n\tcolor: #FFF;\n    text-transform: uppercase;\n    font-weight: 100;\n    margin-top: 10%;\n    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;\n}\n\n.map-countdown__title {\n\tcolor: #FFF;\n    text-transform: uppercase;\n    font-weight: 100;\n    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;\n}\n\n.map-countdown__map {\n    width: 100%;\n    height: 100%;\n    min-height: 35vh;\n}";
   styleInject(css);
 
   var MapCountdown =
@@ -565,12 +571,16 @@
   function () {
     function MapCountdown(_ref) {
       var selector = _ref.selector,
-          routePoints = _ref.routePoints,
           key = _ref.key,
           meta = _ref.meta,
           translations = _ref.translations;
 
       _classCallCheck(this, MapCountdown);
+
+      if (!window[WINDOW_ROUTE_POINTS_KEY]) {
+        console.error("MapCountdown: route points are missing.\n      Did you include routePoints.js in head section?\n      Check for more information: https://github.com/dawidjaniga/map-countdown#add-mapcountdown");
+        return;
+      }
 
       this.containerElement = document.querySelector(selector);
       this.containerElement.classList.add('map-countdown');
@@ -583,7 +593,7 @@
         key: key,
         containerElement: this.containerElement
       });
-      this.map.setRoutePoints(routePoints);
+      this.map.setRoutePoints();
       this.attachEvents();
     }
 

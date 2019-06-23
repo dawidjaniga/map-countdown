@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import parser from 'xml2json'
-
+import { WINDOW_ROUTE_POINTS_KEY } from './constants'
 export default class RouteParser {
   constructor (file, outputFilePath) {
     this.file = file
@@ -10,12 +10,19 @@ export default class RouteParser {
 
   parse () {
     const parsedFile = this.parseFileToJson(this.file)
-    this.saveFile(this.outputFilePath, this.parsePoints(parsedFile))
+    this.saveFile(
+      this.outputFilePath,
+      this.makeWindowAttachable(this.parsePoints(parsedFile))
+    )
   }
 
   parseFileToJson (file) {
     const xml = fs.readFileSync(file, 'utf8')
     return JSON.parse(parser.toJson(xml))
+  }
+
+  makeWindowAttachable (data) {
+    return `window.${WINDOW_ROUTE_POINTS_KEY} = ${JSON.stringify(data)}`
   }
 
   saveFile (file, data) {
