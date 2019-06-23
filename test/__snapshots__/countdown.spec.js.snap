@@ -1,14 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Countdown recountTime() should emit event "recount-time" with ratios 1`] = `
-Object {
-  "daysRatio": 0.8608247422680413,
-  "hoursRatio": 0.4166666666666667,
-  "minutesRatio": 0,
-  "secondsRatio": 0,
-}
-`;
-
 exports[`Countdown setElementValue() should render label "many" when value is greater than 1 1`] = `
 <div>
   <div

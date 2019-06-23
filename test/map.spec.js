@@ -1,4 +1,4 @@
-/* global document, jest, describe, it, expect, afterEach, afterAll */
+/* global document, jest, describe, it, expect, beforeEach, afterAll */
 import cloneDeep from 'lodash/cloneDeep'
 import createGoogleMapsMock from 'jest-google-maps-mock'
 import Map from '../src/map/map'
@@ -50,12 +50,13 @@ describe('Map', () => {
     zoom: 12
   }
 
-  afterEach(() => {
+  beforeEach(() => {
     document = cloneDeep(originalDocument)
     global.window.google.maps = createGoogleMapsMock()
   })
 
   afterAll(() => {
+    document = cloneDeep(originalDocument)
     global.window.google = cloneDeep(originalGoogle)
   })
 
@@ -106,19 +107,33 @@ describe('Map', () => {
     expect(spy).toHaveBeenLastCalledWith(map.getMapContainer(), options)
   })
 
-  it('setRoutePoints() should set route points', () => {
+  it('setRoutePoints() should set route points and max distance', () => {
     const containerElement = document.createElement('div')
     const map = new Map({ key, containerElement })
+    const maxDistance = Math.max(
+      ...routePoints.map(point => point.DistanceMeters)
+    )
     map.setRoutePoints(routePoints)
 
     expect(map.getRoutePoints()).toEqual(routePoints)
+    expect(map.maxDistance).toEqual(maxDistance)
   })
 
-  it.skip('updatePolygons() should update polygons', () => {
-    const map = new Map({ key })
-    map.updatePolygons(0.5, 0.5, 0.5, 0.5)
+  it('updatePolygons() should update polygons', () => {
+    const setPathMock = jest.fn()
+    global.window.google.maps.Polyline = jest.fn().mockImplementation(() => {
+      return {
+        setPath: setPathMock
+      }
+    })
+    const containerElement = document.createElement('div')
+    const map = new Map({ key, containerElement })
+    map.initPolygons()
+    map.setRoutePoints(routePoints)
+    map.updatePolygons(0.01, 0.01, 0.01, 0.01)
 
-    expect(map.getRoutePoints()).toEqual(routePoints)
+    expect(setPathMock).toBeCalledTimes(4)
+    expect(setPathMock.mock.calls).toMatchSnapshot()
   })
 })
 

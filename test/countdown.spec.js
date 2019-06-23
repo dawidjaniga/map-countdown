@@ -65,29 +65,91 @@ describe('Countdown', () => {
     expect(containerElement).toMatchSnapshot()
   })
 
-  it.skip('recountTime() should emit event "recount-time" with ratios', () => {
-    document.body.innerHTML = `
-    <div id="countdown"></div>
-    `
-    try {
-      const countdown = new Countdown('#countdown')
-      countdown.addEventListener('recount-time', function (data) {
-        console.log('event:', data)
-        expect(data).toMatchSnapshot()
-      })
-      countdown.recountTime()
-    } catch (e) {
-      console.log('e:', e)
+  it('addEvenListener() should add listener', () => {
+    const containerElement = document.createElement('div')
+    const countdown = new Countdown({
+      containerElement,
+      meta: '2019-07-13 11:00:00',
+      translations
+    })
+    const eventName = 'event:name'
+    const listener = jest.fn()
+
+    countdown.addEventListener(eventName, listener)
+    expect(countdown.events[eventName]).toContain(listener)
+  })
+
+  it('addEvenListener() should add a listener', () => {
+    const containerElement = document.createElement('div')
+    const countdown = new Countdown({
+      containerElement,
+      meta: '2019-07-13 11:00:00',
+      translations
+    })
+    const eventName = 'event:name'
+    const firstListener = jest.fn()
+    const secondListener = jest.fn()
+
+    countdown.addEventListener(eventName, firstListener)
+    countdown.addEventListener(eventName, secondListener)
+    expect(countdown.events[eventName]).toContain(firstListener, secondListener)
+  })
+
+  it('dispatchEvent() should dispatch an event passing args', () => {
+    const containerElement = document.createElement('div')
+    const countdown = new Countdown({
+      containerElement,
+      meta: '2019-07-13 11:00:00',
+      translations
+    })
+    const eventName = 'event:name'
+    const firstListener = jest.fn()
+    const args = {
+      key: 'name'
     }
+
+    countdown.addEventListener(eventName, firstListener)
+    countdown.dispatchEvent(eventName, args)
+    expect(firstListener).toBeCalled()
+    expect(firstListener).toBeCalledWith(args)
   })
 
   it('should start setInterval', () => {
     jest.useFakeTimers()
     const containerElement = document.createElement('div')
-    new Countdown({ containerElement, meta: '2019-07-13 11:00:00' }) // eslint-disable-line no-new
+    const countdown = new Countdown({
+      containerElement,
+      meta: '2019-07-13 11:00:00'
+    })
+    jest.spyOn(countdown, 'recountTime')
+    jest.advanceTimersByTime(2000)
 
     expect(setInterval).toHaveBeenCalledTimes(1)
     expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000)
+    expect(countdown.recountTime).toHaveBeenCalledTimes(2)
+  })
+
+  it('recountTime() should emit event "countdown:recount" with ratios', () => {
+    const containerElement = document.createElement('div')
+    const countdown = new Countdown({
+      containerElement,
+      meta: '2019-07-13 11:00:00',
+      translations
+    })
+    const eventName = 'countdown:recount'
+    const listener = jest.fn()
+    countdown.addEventListener(eventName, listener)
+    countdown.recountTime()
+
+    expect(listener).toBeCalled()
+    expect(listener).toBeCalledWith(
+      expect.objectContaining({
+        days: expect.any(Number),
+        hours: expect.any(Number),
+        minutes: expect.any(Number),
+        seconds: expect.any(Number)
+      })
+    )
   })
 
   it('should render default translations', () => {
