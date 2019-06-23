@@ -1,9 +1,15 @@
 import Countdown from './countdown'
 import Map from './map/map'
+import { WINDOW_ROUTE_POINTS_KEY } from './constants'
+import { ROUTE_OPTIONS_MISSING_ERROR } from './texts'
 import './style.css'
 
 export default class MapCountdown {
-  constructor ({ selector, routePoints, key, meta, translations }) {
+  constructor ({ selector, key, meta, translations }) {
+    if (!window[WINDOW_ROUTE_POINTS_KEY]) {
+      console.error(ROUTE_OPTIONS_MISSING_ERROR)
+      return
+    }
     this.containerElement = document.querySelector(selector)
     this.containerElement.classList.add('map-countdown')
     this.countdown = new Countdown({
@@ -15,8 +21,11 @@ export default class MapCountdown {
       key,
       containerElement: this.containerElement
     })
-    this.map.setRoutePoints(routePoints)
+
+    this.map.setRoutePoints(window[WINDOW_ROUTE_POINTS_KEY])
     this.attachEvents()
+
+    delete window[WINDOW_ROUTE_POINTS_KEY]
   }
   attachEvents () {
     this.countdown.addEventListener(

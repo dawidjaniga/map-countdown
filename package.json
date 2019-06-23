@@ -59,6 +59,16 @@
     "setupFilesAfterEnv": [
       "./jest.setup.js"
     ],
-    "collectCoverage": true
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/*.js"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|less|sass|scss)$": "<rootDir>/__mocks__/styleMock.js"
+    }
+  },
+  "dependencies": {
+    "lodash": "4.17.11",
+    "semantic-release-cli": "5.1.1"
   }
 }
