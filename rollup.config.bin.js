@@ -6,7 +6,8 @@ export default {
   output: [
     {
       file: 'bin/route-parser.js',
-      format: 'cjs'
+      format: 'cjs',
+      banner: '#!/usr/bin/env node'
     }
   ],
   external: ['fs', 'path', ...Object.keys(pkg.devDependencies || {})],
