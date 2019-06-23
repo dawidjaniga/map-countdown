@@ -84,10 +84,16 @@ describe('Countdown', () => {
   it('should start setInterval', () => {
     jest.useFakeTimers()
     const containerElement = document.createElement('div')
-    new Countdown({ containerElement, meta: '2019-07-13 11:00:00' }) // eslint-disable-line no-new
+    const countdown = new Countdown({
+      containerElement,
+      meta: '2019-07-13 11:00:00'
+    })
+    jest.spyOn(countdown, 'recountTime')
+    jest.advanceTimersByTime(2000)
 
     expect(setInterval).toHaveBeenCalledTimes(1)
     expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000)
+    expect(countdown.recountTime).toHaveBeenCalledTimes(2)
   })
 
   it('should render default translations', () => {
