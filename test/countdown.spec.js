@@ -3,6 +3,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import MockDate from 'mockdate'
 import { getByTestId } from '@testing-library/dom'
 import Countdown from '../src/countdown'
+import { list } from 'postcss'
 const originalDocument = cloneDeep(document)
 
 /* eslint-disable no-global-assign */
@@ -158,6 +159,55 @@ describe('Countdown', () => {
     countdown.setElementValue('hours', value)
     expect(element).toHaveTextContent(`${value}${translations.hours.many}`)
     expect(containerElement).toMatchSnapshot()
+  })
+
+  it('addEvenListener() should add listener', () => {
+    const containerElement = document.createElement('div')
+    const countdown = new Countdown({
+      containerElement,
+      meta: '2019-07-13 11:00:00',
+      translations
+    })
+    const eventName = 'event:name'
+    const listener = jest.fn()
+
+    countdown.addEventListener(eventName, listener)
+    expect(countdown.events[eventName]).toContain(listener)
+  })
+
+  it('addEvenListener() should add a listener', () => {
+    const containerElement = document.createElement('div')
+    const countdown = new Countdown({
+      containerElement,
+      meta: '2019-07-13 11:00:00',
+      translations
+    })
+    const eventName = 'event:name'
+    const firstListener = jest.fn()
+    const secondListener = jest.fn()
+
+    countdown.addEventListener(eventName, firstListener)
+    countdown.addEventListener(eventName, secondListener)
+    expect(countdown.events[eventName]).toContain(firstListener, secondListener)
+  })
+
+  it('dispatchEvent() should dispatch an event passing args', () => {
+    const containerElement = document.createElement('div')
+    const countdown = new Countdown({
+      containerElement,
+      meta: '2019-07-13 11:00:00',
+      translations
+    })
+    const eventName = 'event:name'
+    const firstListener = jest.fn()
+    const args = {
+      key: 'name'
+    }
+
+    countdown.addEventListener(eventName, firstListener)
+    countdown.dispatchEvent(eventName, args)
+    expect(firstListener).toBeCalled()
+    expect(firstListener).toBeCalledWith(args)
   })
 })
 
