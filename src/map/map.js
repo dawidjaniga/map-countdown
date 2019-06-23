@@ -22,6 +22,7 @@ export default class Map {
     this.callback = '__MapCountdownLoadMap'
     this.libraries = ['drawing']
     this.routePoints = []
+    this.maxDistance = 0
     this.secondsPolyline = {}
     this.minutesPolyline = {}
     this.hoursPolyline = {}
@@ -111,6 +112,7 @@ export default class Map {
 
   setRoutePoints (points) {
     this.routePoints = points
+    this.maxDistance = Math.max(...points.map(point => point.DistanceMeters))
   }
 
   getRoutePoints (points) {

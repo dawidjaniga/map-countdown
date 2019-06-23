@@ -106,16 +106,21 @@ describe('Map', () => {
     expect(spy).toHaveBeenLastCalledWith(map.getMapContainer(), options)
   })
 
-  it('setRoutePoints() should set route points', () => {
+  it('setRoutePoints() should set route points and max distance', () => {
     const containerElement = document.createElement('div')
     const map = new Map({ key, containerElement })
+    const maxDistance = Math.max(
+      ...routePoints.map(point => point.DistanceMeters)
+    )
     map.setRoutePoints(routePoints)
 
     expect(map.getRoutePoints()).toEqual(routePoints)
+    expect(map.maxDistance).toEqual(maxDistance)
   })
 
   it.skip('updatePolygons() should update polygons', () => {
     const map = new Map({ key })
+    map.setRoutePoints(routePoints)
     map.updatePolygons(0.5, 0.5, 0.5, 0.5)
 
     expect(map.getRoutePoints()).toEqual(routePoints)
