@@ -45,6 +45,10 @@ route-importer ~/Downloads/training-file.tcx routePoints.js
 ```
 `route-importer` will parse _TCX_ file and save it with given name.
 
+### Prepare Google Maps API Key
+Google Maps need an api key for working. If you don't have a key already, don't worry. You can create new one below:
+https://developers.google.com/maps/documentation/embed/get-api-key
+Replace _'GOOGLE_API_KEY'_ from chosen snippet below with your api key.
 
 ### Add MapCountdown
 #### With module bundler
@@ -59,12 +63,11 @@ new Countdown({
 })
 ```
 
-https://developers.google.com/maps/documentation/embed/get-api-key
-
 #### In browser
-You have to include _routePoints.js_ along with MapCountdown, which load route points automatically. Next, add container for countdown (ie. _#countdown_).
+You have to include _routePoints.js_ along with MapCountdown, which load those points automatically.
+Next, add container for countdown (ie. _#countdown_).
 ``` html
-<html lang="en">
+<html>
 <head>
     <title>MapCountdown Example</title>
     <script src="https://unpkg.com/map-countdown@latest/dist/bundle.js"></script>
@@ -86,9 +89,9 @@ You have to include _routePoints.js_ along with MapCountdown, which load route p
 </html>
 ```
 #### jQuery
-If you wonder is
+You can use jQuery, if you will.
 ``` html
-<html lang="en">
+<html>
 <head>
     <title>MapCountdown Example</title>
     <script src="https://unpkg.com/map-countdown@latest/dist/bundle.js"></script>
