@@ -4,6 +4,7 @@
 [![Coverage Status](https://img.shields.io/codecov/c/github/dawidjaniga/map-countdown.svg)](asd) [![Greenkeeper badge](https://badges.greenkeeper.io/dawidjaniga/map-countdown.svg)](https://greenkeeper.io/)
 ![Build Status](https://img.shields.io/david/dawidjaniga/map-countdown.svg)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![semantic-release](https://img.shields.io/npm/v/map-countdown.svg)](https://www.npmjs.com/package/map-countdown)
 
 ## Overview
 MapCountdown is a JavaScript browser library which shows countdown with additional route filling on a map. It uses Google Map to draw polygons from provided paths and animates them according to time left.
@@ -13,52 +14,22 @@ MapCountdown is a JavaScript browser library which shows countdown with addition
 
 
 ## Usage
+### Steps
+1. Install
+2. Prepare route points
+3. Prepare Google Maps API Key
+4. Add MapCountdown
+    1. With module bundler
+    2. In browser
 
-### With module bundler - Webpack, Rollup, Parcel etc.
-1. Install MapCountdown
+
+### Install
 ``` bash
 yarn install map-countdown
 ```
 or
 ``` bash
 npm install map-countdown
-```
-2. Import MapCountdown
-``` javascript
-import MapCountdown from 'map-countdown'
-import routePoints from './../path/to/routePoints'
-
-new Countdown({
-    selector: '#countdown',
-    key: 'GOOGLE_API_KEY',
-    meta: '2019-07-13 11:30:00',
-    routePoints,
-})
-```
-
-### Browser
-``` html
-<html lang="en">
-<head>
-    <title>MapCountdown Example</title>
-    <script src="https://unpkg.com/map-countdown@latest/dist/bundle.js"></script>
-    <script src="routePoints.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', function () {
-            new MapCountdown({
-                selector: '#countdown',
-                key: 'GOOGLE_API_KEY',
-                routePoints: routePoints,
-                meta: '2019-07-13 11:30:00',
-            })
-        })
-    </script>
-    <body>
-
-        <div id="countdown"></div>
-
-    </body>
-</html>
 ```
 
 ### Prepare route points
@@ -73,3 +44,68 @@ To draw polygons on Google Maps we need to pass an array of route points. To do 
 route-importer ~/Downloads/training-file.tcx routePoints.js
 ```
 `route-importer` will parse _TCX_ file and save it with given name.
+
+
+### Add MapCountdown
+#### With module bundler
+``` javascript
+import MapCountdown from 'map-countdown'
+import './../path/to/routePoints'
+
+new Countdown({
+    selector: '#countdown',
+    key: 'GOOGLE_API_KEY',
+    meta: '2019-07-13 11:30:00'
+})
+```
+
+https://developers.google.com/maps/documentation/embed/get-api-key
+
+#### In browser
+You have to include _routePoints.js_ along with MapCountdown, which load route points automatically. Next, add container for countdown (ie. _#countdown_).
+``` html
+<html lang="en">
+<head>
+    <title>MapCountdown Example</title>
+    <script src="https://unpkg.com/map-countdown@latest/dist/bundle.js"></script>
+    <script src="routePoints.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            new MapCountdown({
+                selector: '#countdown',
+                key: 'GOOGLE_API_KEY',
+                meta: '2019-07-13 11:30:00',
+            })
+        })
+    </script>
+    <body>
+
+        <div id="countdown"></div>
+
+    </body>
+</html>
+```
+#### jQuery
+If you wonder is
+``` html
+<html lang="en">
+<head>
+    <title>MapCountdown Example</title>
+    <script src="https://unpkg.com/map-countdown@latest/dist/bundle.js"></script>
+    <script src="routePoints.js"></script>
+    <script>
+        $(function () {
+            new MapCountdown({
+                selector: '#countdown',
+                key: 'GOOGLE_API_KEY',
+                meta: '2019-07-13 11:30:00',
+            })
+        })
+    </script>
+    <body>
+
+        <div id="countdown"></div>
+
+    </body>
+</html>
+```
