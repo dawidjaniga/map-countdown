@@ -392,6 +392,7 @@
       this.callback = '__MapCountdownLoadMap';
       this.libraries = ['drawing'];
       this.routePoints = [];
+      this.maxDistance = 0;
       this.secondsPolyline = {};
       this.minutesPolyline = {};
       this.hoursPolyline = {};
@@ -477,6 +478,9 @@
       key: "setRoutePoints",
       value: function setRoutePoints(points) {
         this.routePoints = points;
+        this.maxDistance = Math.max.apply(Math, _toConsumableArray(points.map(function (point) {
+          return point.DistanceMeters;
+        })));
       }
     }, {
       key: "getRoutePoints",
@@ -492,11 +496,11 @@
         var minutesPath = [];
         var secondsPath = [];
         this.routePoints.forEach(function (point) {
-          var distance = point.DistanceMeters;
           var position = new google.maps.LatLng({
             lat: parseFloat(point.Position.LatitudeDegrees),
             lng: parseFloat(point.Position.LongitudeDegrees)
           });
+          var distance = point.DistanceMeters;
           var secondsMeters = parseFloat((1 - seconds) * maxDistance);
           var minutesMeters = parseFloat((1 - minutes) * maxDistance);
           var hoursMeters = parseFloat((1 - hours) * maxDistance);
@@ -527,6 +531,10 @@
 
     return Map;
   }();
+
+  var WINDOW_ROUTE_POINTS_KEY = '__MapCountdownRoutePoints';
+
+  var ROUTE_OPTIONS_MISSING_ERROR = "MapCountdown: route points are missing.\nDid you include routePoints.js in head section?\nCheck for more information: https://github.com/dawidjaniga/map-countdown#add-mapcountdown";
 
   function styleInject(css, ref) {
     if ( ref === void 0 ) ref = {};
@@ -563,12 +571,16 @@
   function () {
     function MapCountdown(_ref) {
       var selector = _ref.selector,
-          routePoints = _ref.routePoints,
           key = _ref.key,
           meta = _ref.meta,
           translations = _ref.translations;
 
       _classCallCheck(this, MapCountdown);
+
+      if (!window[WINDOW_ROUTE_POINTS_KEY]) {
+        console.error(ROUTE_OPTIONS_MISSING_ERROR);
+        return;
+      }
 
       this.containerElement = document.querySelector(selector);
       this.containerElement.classList.add('map-countdown');
@@ -581,8 +593,9 @@
         key: key,
         containerElement: this.containerElement
       });
-      this.map.setRoutePoints(routePoints);
+      this.map.setRoutePoints(window[WINDOW_ROUTE_POINTS_KEY]);
       this.attachEvents();
+      delete window[WINDOW_ROUTE_POINTS_KEY];
     }
 
     _createClass(MapCountdown, [{
