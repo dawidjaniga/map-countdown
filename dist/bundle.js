@@ -577,6 +577,7 @@
 
       _classCallCheck(this, MapCountdown);
 
+      
       if (!window[WINDOW_ROUTE_POINTS_KEY]) {
         console.error(ROUTE_OPTIONS_MISSING_ERROR);
         return;
