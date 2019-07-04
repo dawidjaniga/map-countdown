@@ -1,10 +1,8 @@
-/* global document, jest, describe, it, expect, beforeEach, afterAll */
-import cloneDeep from 'lodash/cloneDeep'
+/* global document, jest, describe, it, expect, beforeEach */
 import createGoogleMapsMock from 'jest-google-maps-mock'
 import Map from '../src/map/map'
 import mapStyle from '../src/map/styles'
 import routePoints from '../test/__fixtures__/routePoints'
-import { JSDOM } from 'jsdom'
 const COLORS = {
   RUNDA_MAIN: '#afd02a',
   FORESTGREEN: '#228B22',
