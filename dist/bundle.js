@@ -409,7 +409,9 @@
         _this.initPolygons();
       };
 
-      this.appendMapScriptToDocument();
+      if (!window.google.maps) {
+        this.appendMapScriptToDocument();
+      }
     }
 
     _createClass(Map, [{
@@ -577,7 +579,6 @@
 
       _classCallCheck(this, MapCountdown);
 
-      
       if (!window[WINDOW_ROUTE_POINTS_KEY]) {
         console.error(ROUTE_OPTIONS_MISSING_ERROR);
         return;
