@@ -1,12 +1,10 @@
 /* global document, jest, describe, it, expect, beforeEach, afterAll */
-import cloneDeep from 'lodash/cloneDeep'
 import MapCountdown from '../src/map-countdown'
 import routePoints from '../test/__fixtures__/routePoints'
 import { WINDOW_ROUTE_POINTS_KEY } from '../src/constants'
 import { ROUTE_OPTIONS_MISSING_ERROR } from '../src/texts'
 jest.mock('../src/map/map')
 jest.mock('../src/countdown')
-const originalDocument = cloneDeep(document)
 
 /* eslint-disable no-global-assign */
 describe('MapCountdown', () => {
@@ -19,12 +17,10 @@ describe('MapCountdown', () => {
   }
 
   beforeEach(() => {
-    document = cloneDeep(originalDocument)
     window[WINDOW_ROUTE_POINTS_KEY] = routePoints
   })
 
   afterAll(() => {
-    document = cloneDeep(originalDocument)
     spiedConsole.mockRestore()
     delete window[WINDOW_ROUTE_POINTS_KEY]
   })
