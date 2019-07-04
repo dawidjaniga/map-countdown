@@ -409,7 +409,7 @@
         _this.initPolygons();
       };
 
-      if (!window.google.maps) {
+      if (!window.google || !window.google.hasOwnProperty('maps')) {
         this.appendMapScriptToDocument();
       }
     }
