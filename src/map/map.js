@@ -37,7 +37,9 @@ export default class Map {
       this.initPolygons()
     }
 
-    this.appendMapScriptToDocument()
+    if (!window.google.maps) {
+      this.appendMapScriptToDocument()
+    }
   }
 
   appendMapScriptToDocument () {

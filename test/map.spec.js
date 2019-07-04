@@ -4,7 +4,7 @@ import createGoogleMapsMock from 'jest-google-maps-mock'
 import Map from '../src/map/map'
 import mapStyle from '../src/map/styles'
 import routePoints from '../test/__fixtures__/routePoints'
-
+import { JSDOM } from 'jsdom'
 const COLORS = {
   RUNDA_MAIN: '#afd02a',
   FORESTGREEN: '#228B22',
@@ -21,12 +21,9 @@ const COLORS = {
   ROUTE_6: '#2980B9'
 }
 
-const originalDocument = cloneDeep(document)
-const originalGoogle = cloneDeep(global.window.google)
-
 /* eslint-disable no-global-assign */
 describe('Map', () => {
-  global.window.google = {}
+  global.google = {}
   const key = 'google-generated-api-key'
   const callback = '__MapCountdownLoadMap'
   const libraries = ['drawing']
@@ -51,21 +48,27 @@ describe('Map', () => {
   }
 
   beforeEach(() => {
-    document = cloneDeep(originalDocument)
-    global.window.google.maps = createGoogleMapsMock()
-  })
-
-  afterAll(() => {
-    document = cloneDeep(originalDocument)
-    global.window.google = cloneDeep(originalGoogle)
+    document.querySelector('html').innerHTML = ''
+    global.google.maps = createGoogleMapsMock()
   })
 
   it('should append Google Maps script to body', () => {
+    global.google = {}
     const containerElement = document.createElement('div')
     const src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=${callback}&libraries=${libraries}`
     new Map({ key, callback, containerElement }) // eslint-disable-line no-new
 
     expect(document.scripts).toContainEqual(expect.objectContaining({ src }))
+  })
+
+  it('should not load Google Maps when already existed', () => {
+    const containerElement = document.createElement('div')
+    const src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=${callback}&libraries=${libraries}`
+    new Map({ key, callback, containerElement }) // eslint-disable-line no-new
+
+    expect(document.scripts).not.toContainEqual(
+      expect.objectContaining({ src })
+    )
   })
 
   it('loadMap() should load Google Map with default options into container', () => {
@@ -74,9 +77,9 @@ describe('Map', () => {
     const mapElement = document.createElement('div')
     map.loadMap(mapElement)
 
-    expect(global.window.google.maps.Map).toHaveBeenCalledTimes(1)
-    expect(global.window.google.maps.Map.mock.instances.length).toBe(1)
-    expect(global.window.google.maps.Map).toHaveBeenLastCalledWith(mapElement, {
+    expect(global.google.maps.Map).toHaveBeenCalledTimes(1)
+    expect(global.google.maps.Map.mock.instances.length).toBe(1)
+    expect(global.google.maps.Map).toHaveBeenLastCalledWith(mapElement, {
       ...defaultOptions
     })
   })
@@ -87,9 +90,9 @@ describe('Map', () => {
     const mapElement = document.createElement('div')
     map.loadMap(mapElement, options)
 
-    expect(global.window.google.maps.Map).toHaveBeenCalledTimes(1)
-    expect(global.window.google.maps.Map.mock.instances.length).toBe(1)
-    expect(global.window.google.maps.Map).toHaveBeenLastCalledWith(mapElement, {
+    expect(global.google.maps.Map).toHaveBeenCalledTimes(1)
+    expect(global.google.maps.Map.mock.instances.length).toBe(1)
+    expect(global.google.maps.Map).toHaveBeenLastCalledWith(mapElement, {
       ...defaultOptions,
       ...options
     })
@@ -121,7 +124,7 @@ describe('Map', () => {
 
   it('updatePolygons() should update polygons', () => {
     const setPathMock = jest.fn()
-    global.window.google.maps.Polyline = jest.fn().mockImplementation(() => {
+    global.google.maps.Polyline = jest.fn().mockImplementation(() => {
       return {
         setPath: setPathMock
       }
