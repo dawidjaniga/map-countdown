@@ -411,7 +411,9 @@
         _this.initPolygons();
       };
 
-      this.appendMapScriptToDocument();
+      if (!window.google.maps) {
+        this.appendMapScriptToDocument();
+      }
     }
 
     _createClass(Map, [{
@@ -536,6 +538,8 @@
 
   var WINDOW_ROUTE_POINTS_KEY = '__MapCountdownRoutePoints';
 
+  var ROUTE_OPTIONS_MISSING_ERROR = "MapCountdown: route points are missing.\nDid you include routePoints.js in head section?\nCheck for more information: https://github.com/dawidjaniga/map-countdown#add-mapcountdown";
+
   function styleInject(css, ref) {
     if ( ref === void 0 ) ref = {};
     var insertAt = ref.insertAt;
@@ -578,7 +582,7 @@
       _classCallCheck(this, MapCountdown);
 
       if (!window[WINDOW_ROUTE_POINTS_KEY]) {
-        console.error("MapCountdown: route points are missing.\n      Did you include routePoints.js in head section?\n      Check for more information: https://github.com/dawidjaniga/map-countdown#add-mapcountdown");
+        console.error(ROUTE_OPTIONS_MISSING_ERROR);
         return;
       }
 
@@ -593,8 +597,9 @@
         key: key,
         containerElement: this.containerElement
       });
-      this.map.setRoutePoints();
+      this.map.setRoutePoints(window[WINDOW_ROUTE_POINTS_KEY]);
       this.attachEvents();
+      delete window[WINDOW_ROUTE_POINTS_KEY];
     }
 
     _createClass(MapCountdown, [{

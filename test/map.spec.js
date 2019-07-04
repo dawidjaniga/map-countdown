@@ -21,7 +21,6 @@ const COLORS = {
 
 /* eslint-disable no-global-assign */
 describe('Map', () => {
-  global.google = {}
   const key = 'google-generated-api-key'
   const callback = '__MapCountdownLoadMap'
   const libraries = ['drawing']
@@ -47,11 +46,13 @@ describe('Map', () => {
 
   beforeEach(() => {
     document.querySelector('html').innerHTML = ''
-    global.google.maps = createGoogleMapsMock()
+    global.google = {
+      maps: createGoogleMapsMock()
+    }
   })
 
   it('should append Google Maps script to body', () => {
-    global.google = {}
+    global.google = undefined
     const containerElement = document.createElement('div')
     const src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=${callback}&libraries=${libraries}`
     new Map({ key, callback, containerElement }) // eslint-disable-line no-new

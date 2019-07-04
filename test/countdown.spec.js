@@ -1,9 +1,7 @@
 /* global document, jest, describe, it, expect, beforeEach, afterEach */
-import cloneDeep from 'lodash/cloneDeep'
 import MockDate from 'mockdate'
 import { getByTestId } from '@testing-library/dom'
 import Countdown from '../src/countdown'
-const originalDocument = cloneDeep(document)
 
 /* eslint-disable no-global-assign */
 describe('Countdown', () => {
@@ -52,7 +50,6 @@ describe('Countdown', () => {
 
   afterEach(() => {
     MockDate.reset()
-    restoreDocument()
   })
 
   it('should construct Countdown in provided container', () => {
@@ -216,8 +213,4 @@ describe('Countdown', () => {
     expect(containerElement).toMatchSnapshot()
   })
 })
-
-function restoreDocument () {
-  document = cloneDeep(originalDocument)
-}
 /* eslint-enable no-global-assign */
