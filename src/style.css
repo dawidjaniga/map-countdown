@@ -57,9 +57,12 @@
 }
 
 @media (max-width: 600px) {
+    .map-countdown {
+        height: 100vh;
+    }
+    
     .map-countdown__countdown {
         flex-direction: column;
-        height: 100vh;
     }
     
     .map-countdown__item {
