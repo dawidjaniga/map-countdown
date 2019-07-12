@@ -6,41 +6,25 @@ import Countdown from '../src/countdown'
 /* eslint-disable no-global-assign */
 describe('Countdown', () => {
   const translations = {
-    days: {
-      one: 'Day',
-      many: 'Days'
-    },
-    hours: {
-      one: 'Hour',
-      many: 'Hours'
-    },
-    minutes: {
-      one: 'Minute',
-      many: 'Minutes'
-    },
-    seconds: {
-      one: 'Second',
-      many: 'Seconds'
-    },
+    daysOne: 'Day',
+    daysMany: 'Days',
+    hoursOne: 'Hour',
+    hoursMany: 'Hours',
+    minutesOne: 'Minute',
+    minutesMany: 'Minutes',
+    secondsOne: 'Second',
+    secondsMany: 'Seconds',
     afterCountdown: 'The event has already took place'
   }
   const polishTranslations = {
-    days: {
-      one: 'Dzień',
-      many: 'Dni'
-    },
-    hours: {
-      one: 'Godzina',
-      many: 'Godzin'
-    },
-    minutes: {
-      one: 'Minuta',
-      many: 'Minut'
-    },
-    seconds: {
-      one: 'Sekunda',
-      many: 'Sekund'
-    },
+    daysOne: 'Dzień',
+    daysMany: 'Dni',
+    hoursOne: 'Godzina',
+    hoursMany: 'Godzin',
+    minutesOne: 'Minuta',
+    minutesMany: 'Minut',
+    secondsOne: 'Sekunda',
+    secondsMany: 'Sekund',
     afterCountdown: 'Wydarzenie już się odbyło'
   }
 
@@ -195,7 +179,7 @@ describe('Countdown', () => {
     const element = getByTestId(containerElement, 'map-countdown-hours')
     countdown.setElementValue('hours', value)
 
-    expect(element).toHaveTextContent(`${value}${translations.hours.one}`)
+    expect(element).toHaveTextContent(`${value}${translations.hoursOne}`)
     expect(containerElement).toMatchSnapshot()
   })
 
@@ -209,7 +193,7 @@ describe('Countdown', () => {
     })
     const element = getByTestId(containerElement, 'map-countdown-hours')
     countdown.setElementValue('hours', value)
-    expect(element).toHaveTextContent(`${value}${translations.hours.many}`)
+    expect(element).toHaveTextContent(`${value}${translations.hoursMany}`)
     expect(containerElement).toMatchSnapshot()
   })
 })
