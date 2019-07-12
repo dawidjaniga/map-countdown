@@ -10,14 +10,10 @@ const defaultTranslations = {
   afterCountdown: 'The event has already took place'
 }
 
-interface ICountdownSettings {
+interface CountdownSettings {
   containerElement: HTMLElement,
   meta: string,
   translations: object,
-}
-
-interface MapLike<T> {
-  [key: string]: T
 }
 
 type Element = {
@@ -60,7 +56,7 @@ export default class Countdown {
   private events: Events
   private counterHandler: number
 
-  constructor({ containerElement, meta, translations }: ICountdownSettings) {
+  constructor({ containerElement, meta, translations }: CountdownSettings) {
     this.containerElement = containerElement
     this.translations = { ...defaultTranslations, ...translations }
     this.elements = {}
