@@ -31,6 +31,7 @@
     "@babel/preset-typescript": "7.3.3",
     "@testing-library/dom": "5.5.0",
     "@types/googlemaps": "3.37.0",
+    "@types/xml2json": "0.10.0",
     "babel-jest": "24.8.0",
     "jest": "24.8.0",
     "jest-dom": "3.5.0",
