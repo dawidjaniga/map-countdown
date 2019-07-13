@@ -1,22 +1,14 @@
 /* global document, jest, describe, it, expect, beforeEach */
 import createGoogleMapsMock from 'jest-google-maps-mock'
 import Map from '../src/map/map'
-import mapStyle from '../src/map/styles'
+import { mapStyle } from '../src/map/styles'
 import routePoints from '../test/__fixtures__/routePoints'
 const COLORS = {
-  RUNDA_MAIN: '#afd02a',
-  FORESTGREEN: '#228B22',
   MAP_BACKGROUND: '#333333',
   DAYS: '#252d11',
   HOURS: '#643627',
   MINUTES: '#822d76',
-  SECONDS: '#afd02a',
-  ROUTE_1: '#ED7296',
-  ROUTE_2: '#7072CF',
-  ROUTE_3: '#FFF1CE',
-  ROUTE_4: '#FF9311',
-  ROUTE_5: '#D64700',
-  ROUTE_6: '#2980B9'
+  SECONDS: '#afd02a'
 }
 
 /* eslint-disable no-global-assign */

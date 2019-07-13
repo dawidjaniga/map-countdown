@@ -53,7 +53,7 @@
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
   },
   "include": [
-    "./src/countdown.ts"
+    "./src/map/*.ts"
   ],
   "exclude": [
     "node_modules"

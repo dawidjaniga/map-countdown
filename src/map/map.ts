@@ -1,32 +1,54 @@
 /* global google */
-import mapStyle from './styles.js'
+import { mapStyle } from './styles'
 
 const COLORS = {
-  RUNDA_MAIN: '#afd02a',
-  FORESTGREEN: '#228B22',
   MAP_BACKGROUND: '#333333',
   DAYS: '#252d11',
   HOURS: '#643627',
   MINUTES: '#822d76',
   SECONDS: '#afd02a',
-  ROUTE_1: '#ED7296',
-  ROUTE_2: '#7072CF',
-  ROUTE_3: '#FFF1CE',
-  ROUTE_4: '#FF9311',
-  ROUTE_5: '#D64700',
-  ROUTE_6: '#2980B9'
 }
+
+interface MapSettings {
+  key: string,
+  containerElement: HTMLElement,
+  options: object,
+}
+
+interface Point {
+  DistanceMeters: string,
+  Position: {
+    LatitudeDegrees: string,
+    LongitudeDegrees: string
+  }
+}
+
+declare global {
+  interface Window {
+    [index: string]: any,
+    map: google.maps.Map | undefined
+  }
+}
+
 export default class Map {
-  constructor ({ key, containerElement, options }) {
+  private key: string
+  private mapContainer: HTMLElement
+  private callback: string
+  private libraries: Array<string>
+  private routePoints: Point[]
+  private maxDistance: number
+  private secondsPolyline?: google.maps.Polyline
+  private minutesPolyline?: google.maps.Polyline
+  private hoursPolyline?: google.maps.Polyline
+  private daysPolyline?: google.maps.Polyline
+  private map?: google.maps.Map
+
+  constructor({ key, containerElement, options }: MapSettings) {
     this.key = key
     this.callback = '__MapCountdownLoadMap'
     this.libraries = ['drawing']
     this.routePoints = []
     this.maxDistance = 0
-    this.secondsPolyline = {}
-    this.minutesPolyline = {}
-    this.hoursPolyline = {}
-    this.daysPolyline = {}
     this.mapContainer = document.createElement('div')
     this.mapContainer.classList.add('map-countdown__map')
     containerElement.appendChild(this.mapContainer)
@@ -42,29 +64,30 @@ export default class Map {
     }
   }
 
-  appendMapScriptToDocument () {
+  appendMapScriptToDocument() {
     document.body.appendChild(this.createMapScript())
   }
 
-  createMapScript () {
+  createMapScript() {
     const script = document.createElement('script')
     script.setAttribute(
       'src',
       `https://maps.googleapis.com/maps/api/js?key=${this.key}&callback=${
-        this.callback
+      this.callback
       }&libraries=${this.libraries}`
     )
-    script.setAttribute('defer', true)
-    script.setAttribute('async', true)
+    script.setAttribute('defer', "true")
+    script.setAttribute('async', "true")
 
     return script
   }
 
-  getMapContainer () {
+  getMapContainer() {
     return this.mapContainer
   }
 
-  loadMap (mapContainer, options = {}) {
+  loadMap(mapContainer: HTMLElement, options = {}) {
+    const mapTypeStyle: google.maps.MapTypeStyle[] = mapStyle
     const defaultOptions = {
       zoom: 14,
       center: {
@@ -72,9 +95,9 @@ export default class Map {
         lng: 17.285329699516296
       },
       backgroundColor: COLORS.MAP_BACKGROUND,
-      mapTypeId: 'roadmap',
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
       scrollwheel: false,
-      styles: mapStyle,
+      styles: mapTypeStyle,
       disableDefaultUI: true
     }
 
@@ -82,11 +105,9 @@ export default class Map {
       ...defaultOptions,
       ...options
     })
-
-    window.map = this.map
   }
 
-  initPolygons () {
+  initPolygons() {
     this.daysPolyline = new google.maps.Polyline({
       map: this.map,
       strokeColor: COLORS.DAYS,
@@ -112,32 +133,31 @@ export default class Map {
     })
   }
 
-  setRoutePoints (points) {
+  setRoutePoints(points: Point[]) {
     this.routePoints = points
-    this.maxDistance = Math.max(...points.map(point => point.DistanceMeters))
+    this.maxDistance = Math.max(...points.map(point => parseFloat(point.DistanceMeters)))
   }
 
-  getRoutePoints (points) {
+  getRoutePoints() {
     return this.routePoints
   }
 
-  updatePolygons (days, hours, minutes, seconds) {
-    const maxDistance = 10003
-    const daysPath = []
-    const hoursPath = []
-    const minutesPath = []
-    const secondsPath = []
+  updatePolygons(days: number, hours: number, minutes: number, seconds: number) {
+    const daysPath: google.maps.LatLng[] = []
+    const hoursPath: google.maps.LatLng[] = []
+    const minutesPath: google.maps.LatLng[] = []
+    const secondsPath: google.maps.LatLng[] = []
 
-    this.routePoints.forEach(function (point) {
+    this.routePoints.forEach((point: Point) => {
       const position = new google.maps.LatLng({
         lat: parseFloat(point.Position.LatitudeDegrees),
         lng: parseFloat(point.Position.LongitudeDegrees)
       })
-      const distance = point.DistanceMeters
-      const secondsMeters = parseFloat((1 - seconds) * maxDistance)
-      const minutesMeters = parseFloat((1 - minutes) * maxDistance)
-      const hoursMeters = parseFloat((1 - hours) * maxDistance)
-      const daysMeters = parseFloat((1 - days) * maxDistance)
+      const distance = parseFloat(point.DistanceMeters)
+      const secondsMeters = (1 - seconds) * this.maxDistance
+      const minutesMeters = (1 - minutes) * this.maxDistance
+      const hoursMeters = (1 - hours) * this.maxDistance
+      const daysMeters = (1 - days) * this.maxDistance
 
       if (distance < secondsMeters) {
         secondsPath.push(position)
@@ -156,9 +176,20 @@ export default class Map {
       }
     })
 
-    this.secondsPolyline.setPath(secondsPath)
-    this.minutesPolyline.setPath(minutesPath)
-    this.hoursPolyline.setPath(hoursPath)
-    this.daysPolyline.setPath(daysPath)
+    if (this.secondsPolyline) {
+      this.secondsPolyline.setPath(secondsPath)
+    }
+
+    if (this.minutesPolyline) {
+      this.minutesPolyline.setPath(minutesPath)
+    }
+
+    if (this.hoursPolyline) {
+      this.hoursPolyline.setPath(hoursPath)
+    }
+
+    if (this.daysPolyline) {
+      this.daysPolyline.setPath(daysPath)
+    }
   }
 }
