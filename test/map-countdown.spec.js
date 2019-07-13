@@ -46,9 +46,7 @@ describe('MapCountdown', () => {
       hours: 2
     }
     mapCountdown.updateMap(args)
-    expect(mapCountdown.map.updatePolygons).toBeCalledWith(
-      ...Object.values(args)
-    )
+    expect(mapCountdown.map.updatePolygons).toBeCalledWith(args)
   })
 
   it('should print error in console when routePoints is missing', () => {

@@ -13,7 +13,7 @@ const defaultTranslations = {
 interface CountdownSettings {
   containerElement: HTMLElement,
   meta: string,
-  translations: object,
+  translations?: object,
 }
 
 type Element = {
@@ -55,8 +55,8 @@ export default class Countdown {
   private metaDaysNumberDiff: number
   private metaDayNumberInYear: number
   private elements: Elements
-  private events: Events
   private counterHandler: number
+  public events: Events
 
   constructor({ containerElement, meta, translations }: CountdownSettings) {
     this.containerElement = containerElement
