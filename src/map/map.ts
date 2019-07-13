@@ -1,5 +1,6 @@
 /* global google */
 import { mapStyle } from './styles'
+import { Ratios } from '../countdown';
 
 const COLORS = {
   MAP_BACKGROUND: '#333333',
@@ -12,7 +13,7 @@ const COLORS = {
 interface MapSettings {
   key: string,
   containerElement: HTMLElement,
-  options: object,
+  options?: object,
 }
 
 interface Point {
@@ -142,7 +143,13 @@ export default class Map {
     return this.routePoints
   }
 
-  updatePolygons(days: number, hours: number, minutes: number, seconds: number) {
+  updatePolygons(ratios: Ratios) {
+    const {
+      days,
+      hours,
+      minutes,
+      seconds,
+    } = ratios
     const daysPath: google.maps.LatLng[] = []
     const hoursPath: google.maps.LatLng[] = []
     const minutesPath: google.maps.LatLng[] = []

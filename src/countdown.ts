@@ -33,13 +33,15 @@ type Events = {
   [index: string]: Array<Event>
 }
 
-type PluralTranslation = {
-  one: string,
-  many: string,
-}
-
 type Translations = {
   [key: string]: string
+}
+
+export interface Ratios {
+  days: number,
+  hours: number,
+  minutes: number,
+  seconds: number
 }
 
 
@@ -105,7 +107,7 @@ export default class Countdown {
     this.counterHandler = window.setInterval(() => this.recountTime(), 1000)
   }
 
-  addEventListener(name: string, callback: () => void) {
+  addEventListener(name: string, callback: (arg?: any) => void) {
     if (!this.events[name]) {
       this.events[name] = []
     }
@@ -156,13 +158,14 @@ export default class Countdown {
       const hoursRatio = timeLeftDate.getHours() / 24
       const minutesRatio = timeLeftDate.getMinutes() / 60
       const secondsRatio = timeLeftDate.getSeconds() / 60
-
-      this.dispatchEvent('countdown:recount', {
+      const ratios: Ratios = {
         days: daysRatio,
         hours: hoursRatio,
         minutes: minutesRatio,
         seconds: secondsRatio
-      })
+      }
+
+      this.dispatchEvent('countdown:recount', ratios)
 
       this.setElementValue('days', days)
       this.setElementValue('hours', hours)
