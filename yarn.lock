@@ -6709,7 +6709,7 @@ node-emoji@^1.4.1:
   dependencies:
     lodash.toarray "^4.4.0"
 
-node-expat@^2.3.15:
+node-expat@^2.3.18:
   version "2.3.18"
   resolved "https://registry.yarnpkg.com/node-expat/-/node-expat-2.3.18.tgz#d9e6949cecda15e131f14259b73dc7b9ed7bc560"
   integrity sha512-9dIrDxXePa9HSn+hhlAg1wXkvqOjxefEbMclGxk2cEnq/Y3U7Qo5HNNqeo3fQ4bVmLhcdt3YN1TZy7WMZy4MHw==
@@ -10611,14 +10611,14 @@ xml-name-validator@^3.0.0:
   resolved "https://registry.yarnpkg.com/xml-name-validator/-/xml-name-validator-3.0.0.tgz#6ae73e06de4d8c6e47f9fb181f78d648ad457c6a"
   integrity sha512-A5CUptxDsvxKJEU3yO6DuWBSJz/qizqzJKOMIfUJHETbBw/sFaDxgd6fxm1ewUaM0jZ444Fc5vC5ROYurg/4Pw==
 
-xml2json@0.11.2:
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/xml2json/-/xml2json-0.11.2.tgz#70ddd234fd7818312cc58455cab8457b5bcc7c52"
-  integrity sha512-ZJpHpPOL0T5lOvAHMnWm59iQOPqNtam5t2TMUllWZ1k5Wm8L5YyvQnkeaVnRKCvDwY5EumqXWyOjjMdQVz272A==
+xml2json@0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/xml2json/-/xml2json-0.12.0.tgz#b2ae450b267033b76d896f86e022fa7bff678572"
+  integrity sha512-EPJHRWJnJUYbJlzR4pBhZODwWdi2IaYGtDdteJi0JpZ4OD31IplWALuit8r73dJuM4iHZdDVKY1tLqY2UICejg==
   dependencies:
     hoek "^4.2.1"
     joi "^13.1.2"
-    node-expat "^2.3.15"
+    node-expat "^2.3.18"
 
 xtend@^4.0.0, xtend@^4.0.1, xtend@~4.0.1:
   version "4.0.1"
